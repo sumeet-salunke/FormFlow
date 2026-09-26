@@ -8,6 +8,11 @@ import healthRoutes from "./routes/health.routes.js";
 import notFound from "./middlewares/notFound.js";
 import errorHandler from "./middlewares/errorHandler.js";
 
+import authRoutes from "./routes/auth.routes.js";
+
+
+
+
 const app = express();
 /**
  * Security middleware
@@ -31,6 +36,8 @@ app.use(express.json());
 
 //routes
 app.use("/api/v1/health", healthRoutes);
+app.use("/api/v1/auth", authRoutes);
+
 
 // not found
 app.use(notFound);
