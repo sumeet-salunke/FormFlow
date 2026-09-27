@@ -23,3 +23,9 @@ export const loginUser = (credentials) => {
     body: JSON.stringify(credentials),
   });
 };
+
+export const getCurrentUser = () => {
+  return apiRequest("/auth/me", {
+    method: "GET",
+  });
+};

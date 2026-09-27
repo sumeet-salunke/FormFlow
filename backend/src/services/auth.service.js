@@ -63,5 +63,21 @@ class AuthService {
       }
     };
   }
+
+  async getCurrentUser(userId) {
+    const user = await userRepository.findById(userId);
+    if (!user) {
+      throw new ApiError(404, AUTH.MESSAGES.USER_NOT_FOUND, AUTH.CODES.USER_NOT_FOUND);
+    }
+    return {
+      message: "User fetched Successfully",
+      data: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        createdAt: user.createdAt,
+      },
+    };
+  }
 }
 export default new AuthService();
