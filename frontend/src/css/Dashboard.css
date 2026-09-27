@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+/* Main Body Styling */
+body {
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: radial-gradient(circle at top left, #1a1c29, #0e1017);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #f3f4f6;
+}
+
+/* Card Container (Targets the outer div in Dashboard) */
+div:has(> h1) {
+  width: 100%;
+  max-width: 480px;
+  padding: 2.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 80px rgba(99, 102, 241, 0.1);
+  box-sizing: border-box;
+  text-align: center;
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Main Dashboard Title */
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 1.75rem;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Fetch Action Button */
+button {
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Status / Error / Loading Paragraphs */
+p {
+  margin-top: 1.25rem;
+  margin-bottom: 0;
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+/* User Card Container (Targets the nested div when user exists) */
+div>div {
+  margin-top: 1.75rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  text-align: left;
+  animation: slideUp 0.4s ease-out;
+}
+
+/* Welcome User Heading */
+div>div>h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f3f4f6;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+/* Email Display Details */
+div>div>p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #a5b4fc;
+  font-weight: 500;
+  text-align: left;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

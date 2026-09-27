@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { registerUser } from "../../services/auth.service.js";
-
+import "../../css/Register.css";
 const Register = () => {
   const [formData, setFormData] = useState({
     name: "",

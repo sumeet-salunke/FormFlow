@@ -29,3 +29,9 @@ export const getCurrentUser = () => {
     method: "GET",
   });
 };
+
+export const logoutUser = () => {
+  return apiRequest("/auth/logout", {
+    method: "POST",
+  });
+};

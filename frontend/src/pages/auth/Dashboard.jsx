@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { getCurrentUser } from "../../services/auth.service.js";
+import { getCurrentUser, logoutUser } from "../../services/auth.service.js";
+import "../../css/Dashboard.css";
+
 const Dashboard = () => {
   const [user, setUser] = useState(null);
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -17,18 +20,38 @@ const Dashboard = () => {
       setLoading(false);
     }
   }
+  const handleLogout = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const result = await logoutUser();
+      setMessage(result.message);
+      setUser(null);
+
+    } catch (err) {
+      setError(err?.error?.message || "Logout failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return <>
     <div>
       <h1>Dashboard</h1>
       <button onClick={fetchCurrentUser}>Get Current User</button>
+
       {loading && <p>Loading..........</p>}
+      {message && <p>{message}</p>}
       {error && <p>{error}</p>}
 
       {user && (
         <div> <h2>Welcome, {user.name}</h2>
           <p>EMail: {user.email}</p>
+          <button onClick={handleLogout}>Logout</button>
         </div>
+
       )}
+
     </div>
   </>
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { loginUser } from "../../services/auth.service.js";
+import "../../css/Login.css";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -29,7 +30,7 @@ const Login = () => {
       setCredentials({
         email: "",
         password: "",
-      })
+      });
     } catch (error) {
       setError(error?.error?.message || "Login failed.");
     } finally {

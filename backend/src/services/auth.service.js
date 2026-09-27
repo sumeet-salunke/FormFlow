@@ -79,5 +79,13 @@ class AuthService {
       },
     };
   }
+
+  async logout() {
+
+    return {
+      message: AUTH.MESSAGES.LOGOUT_SUCCESS,
+      data: null,
+    };
+  }
 }
 export default new AuthService();
