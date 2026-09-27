@@ -16,3 +16,10 @@ export const registerUser = async (userData) => {
     body: JSON.stringify(userData),
   });
 };
+
+export const loginUser = (credentials) => {
+  return apiRequest("/auth/login", {
+    method: "POST",
+    body: JSON.stringify(credentials),
+  });
+};
