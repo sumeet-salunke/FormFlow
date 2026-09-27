@@ -35,3 +35,10 @@ export const logoutUser = () => {
     method: "POST",
   });
 };
+
+export const editProfile = (userData) => {
+  return apiRequest("/auth/me", {
+    method: "PATCH",
+    body: JSON.stringify(userData),
+  });
+};

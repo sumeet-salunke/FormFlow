@@ -46,3 +46,12 @@ export const loginValidation = [
     .withMessage("Password is required."),
 
 ];
+
+export const editProfileValidation = [
+  body("name")
+    .trim()
+    .notEmpty()
+    .withMessage("Name is required")
+    .isLength({ max: 100 })
+    .withMessage("Name must not exceed 100 characters"),
+];

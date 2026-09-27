@@ -87,5 +87,33 @@ class AuthService {
       data: null,
     };
   }
+
+  async editProfile(userId, userData) {
+    const allowedFields = ["name"];
+    const providedFields = Object.keys(userData);
+    const hasInvalidField = providedFields.some((field) => !allowedFields.includes(field));
+    if (hasInvalidField) {
+      throw new ApiError(400, "Only name can be edited.",
+        "INVALID_PROFILE_FIELD"
+      );
+    }
+
+    const { name } = userData;
+    const updatedUser = await userRepository.updateName(userId, name);
+
+    if (!updatedUser) {
+      throw new ApiError(404, AUTH.MESSAGES.USER_NOT_FOUND, AUTH.CODES.USER_NOT_FOUND);
+    }
+    return {
+      message: AUTH.MESSAGES.UPDATE_SUCCESS,
+      data: {
+        id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+
+      }
+    };
+
+  }
 }
 export default new AuthService();

@@ -17,6 +17,19 @@ class UserRepository {
   async findById(userId) {
     return User.findById(userId);
   }
+
+  async updateName(userId, name) {
+    return User.findByIdAndUpdate(
+      userId, {
+      $set: {
+        name
+      }
+    }, {
+      returnDocument: "after",
+      runValidators: true,
+    },
+    );
+  }
 }
 
 export default new UserRepository();

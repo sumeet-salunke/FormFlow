@@ -1,7 +1,11 @@
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { registerUser } from "../../services/auth.service.js";
 import "../../css/Register.css";
+
+
 const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -33,7 +37,8 @@ const Register = () => {
         email: "",
         password: "",
         confirmPassword: "",
-      })
+      });
+      navigate("/login");
     } catch (error) {
       setError(error?.error?.message || "Registration failed.");
     } finally {
@@ -61,6 +66,9 @@ const Register = () => {
       {message && <p>{message}</p>}
 
       {error && <p>{error}</p>}
+      <p>
+        Already have an account? <Link to="/login">Login</Link>
+      </p>
     </div>
   );
 };

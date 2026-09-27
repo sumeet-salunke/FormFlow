@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../../services/auth.service.js";
 import "../../css/Login.css";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
@@ -31,6 +33,7 @@ const Login = () => {
         email: "",
         password: "",
       });
+      navigate("/dashboard");
     } catch (error) {
       setError(error?.error?.message || "Login failed.");
     } finally {
@@ -56,6 +59,9 @@ const Login = () => {
       {message && <p>{message}</p>}
 
       {error && <p>{error}</p>}
+      <p>
+        Don't have an account? <Link to="/register">Register</Link>
+      </p>
     </div>
   );
 };
