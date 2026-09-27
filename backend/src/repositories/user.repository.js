@@ -4,7 +4,7 @@ class UserRepository {
   async findByEmail(email, includePassword = false) {
     const query = User.findOne({ email });
     if (includePassword) {
-      query.select("+password");
+      query.select("+passwordHash");
     }
     return query;
   }

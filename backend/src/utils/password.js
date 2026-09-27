@@ -17,7 +17,7 @@ const hashPassword = async (password) => {
  */
 
 const verifyPassword = async (password, passwordHash) => {
-  return argon2.verify(password, passwordHash);
+  return argon2.verify(passwordHash, password);
 };
 
 export { hashPassword, verifyPassword };

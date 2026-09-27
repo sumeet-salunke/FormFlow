@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
+import sessionConfig from "./config/session.js";
 
 import env from "./config/env.js";
 import healthRoutes from "./routes/health.routes.js";
@@ -34,6 +35,8 @@ app.use(cors({
 //request body parsing-> Allow express to read JSON request bodies
 app.use(express.json());
 
+//session config
+app.use(sessionConfig);
 //routes
 app.use("/api/v1/health", healthRoutes);
 app.use("/api/v1/auth", authRoutes);

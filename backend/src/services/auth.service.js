@@ -1,4 +1,4 @@
-import { hashPassword } from "../utils/password.js";
+import { hashPassword, verifyPassword } from "../utils/password.js";
 import userRepository from "../repositories/user.repository.js";
 import ApiError from "../helpers/ApiError.js";
 import AUTH from "../constants/auth.constants.js";
@@ -36,6 +36,31 @@ class AuthService {
         email: user.email,
         createdAt: user.createdAt
       },
+    };
+  }
+
+  async login({ email, password }) {
+    const normalizedEmail = email.trim().toLowerCase();
+
+    const user = await userRepository.findByEmail(normalizedEmail, true);
+
+    if (!user) {
+      throw new ApiError(401, AUTH.MESSAGES.INVALID_CREDENTIALS, AUTH.CODES.INVALID_CREDENTIALS);
+    }
+
+    const isPasswordValid = await verifyPassword(password, user.passwordHash);
+
+    if (!isPasswordValid) {
+      throw new ApiError(401, AUTH.MESSAGES.INVALID_CREDENTIALS, AUTH.CODES.INVALID_CREDENTIALS);
+    }
+
+    return {
+      message: AUTH.MESSAGES.LOGIN_SUCCESS,
+      data: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      }
     };
   }
 }

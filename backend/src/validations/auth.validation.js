@@ -31,3 +31,18 @@ export const registerValidation = [
       return true;
     }),
 ];
+
+export const loginValidation = [
+  body("email")
+    .trim()
+    .notEmpty()
+    .withMessage("email is required.")
+    .isEmail()
+    .withMessage("Please provide a valid email.")
+    .normalizeEmail()
+  ,
+  body("password")
+    .notEmpty()
+    .withMessage("Password is required."),
+
+];

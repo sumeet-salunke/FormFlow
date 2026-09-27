@@ -6,6 +6,7 @@ const AUTH = {
     INVALID_CREDENTIALS: "Invalid email or password.",
     USER_NOT_FOUND: "User not found.",
     UNAUTHORIZED: "Authentication required.",
+    LOGIN_SUCCESS: "LOgin success."
   },
 
   CODES: {
