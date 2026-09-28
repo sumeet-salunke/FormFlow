@@ -6,3 +6,9 @@ export const createForm = (formData) => {
     body: JSON.stringify(formData),
   });
 };
+
+export const getMyForms = () => {
+  return apiRequest("/forms", {
+    method: "GET"
+  });
+};

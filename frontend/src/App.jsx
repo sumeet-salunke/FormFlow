@@ -4,6 +4,7 @@ import Register from "./pages/auth/Register.jsx";
 import Login from "./pages/auth/Login.jsx";
 import Dashboard from "./pages/auth/Dashboard.jsx";
 import CreateForm from "./pages/forms/CreateForm.jsx";
+import MyForms from "./pages/forms/MyForms.jsx";
 
 const App = () => {
   return <>
@@ -15,6 +16,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/forms/create" element={<CreateForm />} />
+        <Route path="/forms" element={<MyForms />} />
 
       </Routes>
     </BrowserRouter>

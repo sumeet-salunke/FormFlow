@@ -22,26 +22,17 @@ class FormService {
     };
   }
 
-  async getForm(formId, userId) {
-    if (!formId) {
-      throw new ApiError(400, FORM.MESSAGES.FORM_ID_REQUIRED, FORM.CODES.FORM_ID_REQUIRED);
-    }
+
+
+  async getMyForms(userId) {
     if (!userId) {
       throw new ApiError(401, AUTH.MESSAGES.UNAUTHORIZED, AUTH.CODES.UNAUTHORIZED);
     }
-    const form = await formRepository.findById(formId);
-    if (!form) {
-      throw new ApiError(404, FORM.MESSAGES.FORM_NOT_FOUND, FORM.CODES.FORM_NOT_FOUND);
-    }
-    //make sure the user owns the form
-    if (form.ownerId.toString() !== userId.toString()) {
-      throw new ApiError(403, FORM.MESSAGES.FORBIDDEN, FORM.CODES.FORBIDDEN);
-    }
+    const forms = await formRepository.findOwnerById(userId);
     return {
       message: FORM.MESSAGES.FORM_FETCHED,
-      data: form,
-    };
-
+      data: forms
+    }
   }
 
 }

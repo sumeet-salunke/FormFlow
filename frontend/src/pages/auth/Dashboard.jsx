@@ -28,6 +28,10 @@ const Dashboard = () => {
     }
   };
 
+  const handleMyforms = () => {
+    navigate("/forms")
+  }
+
   const handleLogout = async () => {
     setLoggingOut(true);
     setError("");
@@ -85,6 +89,8 @@ const Dashboard = () => {
       <button onClick={handleLogout}>{loggingOut ? "logging out......" : "Logout"}</button>
 
       <button onClick={handleNavigation}>Create Forms</button>
+
+      <button onClick={handleMyforms}>My forms</button>
 
 
       {loading && <p>Loading..........</p>}

@@ -27,7 +27,7 @@ export const FORM = {
     FORM_NOT_FOUND: "Form not found.",
     FORBIDDEN: "You do not have permission to access this form.",
     TITLE_REQUIRED: "Title required.",
-    FORM_FETCHED: "Form fetched successfully",
+    FORM_FETCHED: "Forms fetched successfully",
 
   },
   CODES: {
@@ -36,6 +36,7 @@ export const FORM = {
     FORM_NOT_FOUND: "FORM_NOT_FOUND"
     , FORBIDDEN: "FORBIDDEN",
     TITLE_REQUIRED: "TITLE_REQUIRED",
+    FORMS_FETCHED: "FORMS_FETCHED",
 
 
   }
