@@ -72,6 +72,9 @@ const Dashboard = () => {
     setMessage("");
     setError("");
   };
+  const handleNavigation = () => {
+    navigate("/forms/create");
+  }
   useEffect(() => {
     fetchCurrentUser();
   }, []);
@@ -80,6 +83,8 @@ const Dashboard = () => {
     <div>
       <h1>Dashboard</h1>
       <button onClick={handleLogout}>{loggingOut ? "logging out......" : "Logout"}</button>
+
+      <button onClick={handleNavigation}>Create Forms</button>
 
 
       {loading && <p>Loading..........</p>}

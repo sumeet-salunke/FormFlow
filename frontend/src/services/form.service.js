@@ -1,0 +1,8 @@
+import apiRequest from "./api.js";
+
+export const createForm = (formData) => {
+  return apiRequest("/forms", {
+    method: "POST",
+    body: JSON.stringify(formData),
+  });
+};

@@ -10,8 +10,7 @@ import notFound from "./middlewares/notFound.js";
 import errorHandler from "./middlewares/errorHandler.js";
 
 import authRoutes from "./routes/auth.routes.js";
-
-
+import formRoutes from "./routes/form.routes.js";
 
 
 const app = express();
@@ -40,6 +39,7 @@ app.use(sessionConfig);
 //routes
 app.use("/api/v1/health", healthRoutes);
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/forms", formRoutes);
 
 
 // not found
