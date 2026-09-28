@@ -28,6 +28,8 @@ export const FORM = {
     FORBIDDEN: "You do not have permission to access this form.",
     TITLE_REQUIRED: "Title required.",
     FORM_FETCHED: "Forms fetched successfully",
+    FORM_UPDATED: "Form updated successfully.",
+    FORM_NOT_EDITABLE: "This form cannot be edited.",
 
   },
   CODES: {
@@ -37,6 +39,7 @@ export const FORM = {
     , FORBIDDEN: "FORBIDDEN",
     TITLE_REQUIRED: "TITLE_REQUIRED",
     FORMS_FETCHED: "FORMS_FETCHED",
+    FORM_NOT_EDITABLE: "FORM_NOT_EDITABLE",
 
 
   }

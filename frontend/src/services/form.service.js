@@ -12,3 +12,14 @@ export const getMyForms = () => {
     method: "GET"
   });
 };
+
+export const updateForm = (formId, formData) => {
+  return apiRequest(`/forms/${formId}`, {
+    method: "PATCH",
+    body: JSON.stringify(formData),
+  });
+};
+
+export const getFormById = (formId) => {
+  return apiRequest(`/forms/${formId}`);
+};

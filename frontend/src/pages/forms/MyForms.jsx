@@ -80,7 +80,7 @@ const MyForms = () => {
                   View
                 </button>
 
-                <button type="button">
+                <button type="button" onClick={() => navigate(`/forms/${form._id}/edit`)}>
                   Edit
                 </button>
               </div>

@@ -1,3 +1,4 @@
+import { FORM_STATUS } from "../constants/form.constants.js";
 import Form from "../models/Form.js";
 
 class FormRepository {
@@ -15,6 +16,18 @@ class FormRepository {
     return Form.find({
       ownerId
     }).sort({ createdAt: -1 });
+  }
+
+  async updateDraftForm(formId, updateData) {
+    return Form.findOneAndUpdate({
+      _id: formId,
+      status: FORM_STATUS.DRAFT,
+    }, {
+      $set: updateData,
+    }, {
+      returnDocument: "after",
+      runValidators: true
+    });
   }
 
 }

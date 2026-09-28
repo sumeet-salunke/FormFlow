@@ -1,6 +1,6 @@
 import formRepository from "../repositories/form.repository.js";
 import ApiError from "../helpers/ApiError.js";
-import { FORM } from "../constants/form.constants.js";
+import { FORM, FORM_STATUS } from "../constants/form.constants.js";
 import AUTH from "../constants/auth.constants.js";
 
 class FormService {
@@ -33,6 +33,88 @@ class FormService {
       message: FORM.MESSAGES.FORM_FETCHED,
       data: forms
     }
+  }
+
+  async updateForm(userId, formId, formData) {
+    if (!userId) {
+      throw new ApiError(401, AUTH.MESSAGES.UNAUTHORIZED, AUTH.CODES.UNAUTHORIZED);
+    }
+    if (!formId) {
+      throw new ApiError(400, FORM.MESSAGES.FORM_ID_REQUIRED, FORM.CODES.FORM_ID_REQUIRED);
+    }
+    const form = await formRepository.findById(formId);
+
+    if (!form) {
+      throw new ApiError(404, FORM.MESSAGES.FORM_NOT_FOUND, FORM.CODES.FORM_NOT_FOUND);
+    }
+    if (form.status !== FORM_STATUS.DRAFT) {
+      throw new ApiError(400, FORM.MESSAGES.FORM_NOT_EDITABLE, FORM.CODES.FORM_NOT_EDITABLE);
+    }
+    const { title, description, availability, fields } = formData;
+    const updateData = {};
+    //Only add properties that were actually supplied. This makes PATCH like PATCH rather than replacing the entire document.
+    if (title !== undefined) {
+      updateData.title = title.trim();
+    }
+    if (description !== undefined) {
+      updateData.description = description.trim();
+    }
+    if (availability !== undefined) {
+      updateData.availability = availability;
+    }
+    if (fields !== undefined) {
+      updateData.fields = fields;
+    }
+    const updatedForm = await formRepository.updateDraftForm(formId, updateData);
+
+    if (!updatedForm) {
+      throw new ApiError(400, FORM.MESSAGES.FORM_NOT_EDITABLE, FORM.CODES.FORM_NOT_EDITABLE);
+    }
+    return {
+      message: FORM.MESSAGES.FORM_UPDATED,
+      data: updatedForm,
+    }
+  }
+  async getForm(formId, userId) {
+    if (!formId) {
+      throw new ApiError(
+        400,
+        FORM.MESSAGES.FORM_ID_REQUIRED,
+        FORM.CODES.FORM_ID_REQUIRED
+      );
+    }
+
+    if (!userId) {
+      throw new ApiError(
+        401,
+        AUTH.MESSAGES.UNAUTHORIZED,
+        AUTH.CODES.UNAUTHORIZED
+      );
+    }
+
+    const form = await formRepository.findById(formId);
+
+    if (!form) {
+      throw new ApiError(
+        404,
+        FORM.MESSAGES.FORM_NOT_FOUND,
+        FORM.CODES.FORM_NOT_FOUND
+      );
+    }
+
+    // The user can only access their own form.
+    if (form.ownerId.toString() !== userId.toString()) {
+      throw new ApiError(
+        403,
+        FORM.MESSAGES.FORBIDDEN,
+        FORM.CODES.FORBIDDEN
+      );
+    }
+
+    return {
+      message: FORM.MESSAGES.FORM_FETCHED,
+      data: form,
+    };
   }
 
 }
