@@ -1,11 +1,13 @@
 import express from "express";
-import { createForm, getMyForms, updateForm, getForm, publishForm } from "../controllers/form.controller.js";
+import { createForm, getMyForms, updateForm, getForm, publishForm, getPublicForm } from "../controllers/form.controller.js";
 import { createFormValidation, updateFormValidation, publishFormValidation } from "../validations/form.validation.js";
 import validateRequest from "../middlewares/validateRequest.js";
 import authenticate from "../middlewares/authenticate.js";
 
 
 const router = express.Router();
+
+router.get("/public/:publicId", getPublicForm);
 
 //create form
 router.post("/", authenticate, createFormValidation, validateRequest, createForm);
@@ -19,5 +21,6 @@ router.patch("/:formId", authenticate, updateFormValidation, validateRequest, up
 router.get("/:formId", authenticate, getForm);
 
 router.post("/:formId/publish", authenticate, publishFormValidation, validateRequest, publishForm);
+
 
 export default router;

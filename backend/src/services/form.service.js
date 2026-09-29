@@ -1,8 +1,9 @@
 import formRepository from "../repositories/form.repository.js";
 import ApiError from "../helpers/ApiError.js";
-import { FIELD_TYPES, FORM, FORM_STATUS } from "../constants/form.constants.js";
+import { AVAILABILITY_TYPES, FIELD_TYPES, FORM, FORM_STATUS } from "../constants/form.constants.js";
 import AUTH from "../constants/auth.constants.js";
 import generatePublicId from "../utils/publicId.js";
+import { buffer } from "stream/consumers";
 
 
 class FormService {
@@ -50,7 +51,7 @@ class FormService {
     if (form.status !== FORM_STATUS.DRAFT) {
       throw new ApiError(400, FORM.MESSAGES.FORM_NOT_EDITABLE, FORM.CODES.FORM_NOT_EDITABLE);
     }
-    const { title, description, availability, fields } = formData;
+    const { title, description, availability, fields, startDate, endDate } = formData;
     const updateData = {};
     //Only add properties that were actually supplied. This makes PATCH like PATCH rather than replacing the entire document.
     if (title !== undefined) {
@@ -65,6 +66,29 @@ class FormService {
     if (fields !== undefined) {
       updateData.fields = fields;
     }
+    //Determine the availaility that should be applied after this PATCH. If the client didn't send availability, use the form's current value.
+    const newAvailability = availability !== undefined ? availability : form.availability;
+    updateData.availability = newAvailability;
+
+    if (newAvailability === AVAILABILITY_TYPES.ALWAYS) {
+      updateData.startDate = null;
+      updateData.endDate = null;
+    }
+    if (newAvailability === AVAILABILITY_TYPES.SCHEDULED
+    ) {
+      //for scheduled use the newly supplied dates. If a date wasn't supplied in this PATCH, preserve the existing data
+      const newStartDate = startDate !== undefined ? startDate : form.startDate;
+      const newEndDate = endDate !== undefined ? endDate : form.endDate;
+      if (!newStartDate || !newEndDate) {
+        throw new ApiError(400, FORM.MESSAGES.CANNOT_UPDATE, FORM.CODES.CANNOT_UPDATE);
+      }
+      if (new Date(newStartDate) >= new Date(newEndDate)) {
+        throw new ApiError(400, FORM.MESSAGES.CANNOT_UPDATE, FORM.CODES.CANNOT_UPDATE);
+      }
+      updateData.startDate = newStartDate;
+      updateData.endDate = newEndDate;
+    }
+
     const updatedForm = await formRepository.updateDraftForm(formId, updateData);
 
     if (!updatedForm) {
@@ -232,6 +256,46 @@ class FormService {
       ,
       data: publishedForm,
     };
+  }
+
+  async getPublicForm(publicId) {
+    if (!publicId) {
+      throw new ApiError(400, FORM.MESSAGES.PUBLICID_REQUIRED, FORM.CODES.PUBLICID_REQUIRED);
+    }
+    const publicForm = await formRepository.findPublishedFormByPublicId(publicId);
+
+    if (!publicForm) {
+      throw new ApiError(404, FORM.MESSAGES.FORM_NOT_FOUND, FORM.CODES.FORM_NOT_FOUND);
+    }
+    if (publicForm.status !== FORM_STATUS.PUBLISHED) {
+      throw new ApiError(400, FORM.MESSAGES.FORM_NOT_PUBLISHED, FORM.CODES.FORM_NOT_PUBLISHED);
+    }
+
+    if (publicForm.availability === AVAILABILITY_TYPES.SCHEDULED) {
+
+      const now = new Date();
+      if (now < publicForm.startDate) {
+        throw new ApiError(403, FORM.MESSAGES.FORM_NOT_AVAILABLE_YET, FORM.CODES.FORM_NOT_AVAILABLE_YET, {
+          startDate: publicForm.startDate,
+        });
+      }
+      if (now > publicForm.endDate) {
+        throw new ApiError(403, FORM.MESSAGES.FORM_EXPIRED, FORM.CODES.FORM_EXPIRED, {
+          endDate: publicForm.endDate,
+        })
+      }
+    }
+    return {
+      message: FORM.MESSAGES.FORM_FETCHED,
+      data: {
+        title: publicForm.title,
+        description: publicForm.description,
+        availability: publicForm.availability,
+        fields: publicForm.fields,
+        publicId: publicForm.publicId,
+
+      },
+    }
   }
 }
 

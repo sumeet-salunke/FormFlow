@@ -46,6 +46,10 @@ class FormRepository {
     }
     );
   }
+
+  async findPublishedFormByPublicId(publicId) {
+    return Form.findOne({ publicId });
+  }
 }
 
 export default new FormRepository();

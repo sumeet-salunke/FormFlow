@@ -41,6 +41,17 @@ export const updateFormValidation = [
     .optional()
     .isIn(Object.values(AVAILABILITY_TYPES))
     .withMessage("Availability must be a string"),
+  body("startDate")
+    .optional()
+    .isISO8601()
+    .withMessage("Start date must be a valid ISO Date.")
+
+  ,
+  body("endDate")
+    .optional()
+    .isISO8601()
+    .withMessage("EndDate must be a valid ISO Date.")
+  ,
 
   body("fields")
     .optional()

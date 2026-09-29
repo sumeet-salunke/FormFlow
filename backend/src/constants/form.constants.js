@@ -32,6 +32,11 @@ export const FORM = {
     FORM_NOT_EDITABLE: "This form cannot be edited.",
     CANNOT_PUBLISH: "Cannot publish form",
     FORM_PUBLISHED: "Form published successfully",
+    PUBLICID_REQUIRED: "PublicId is required.",
+    FORM_NOT_PUBLISHED: "Form not published yet.",
+    CANNOT_UPDATE: "Cannot edit form",
+    FORM_NOT_AVAILABLE_YET: "This form is no longer accepting responses.",
+    FORM_EXPIRED: "This form is no longer accepting responses.",
 
   },
   CODES: {
@@ -43,6 +48,10 @@ export const FORM = {
     FORMS_FETCHED: "FORMS_FETCHED",
     FORM_NOT_EDITABLE: "FORM_NOT_EDITABLE",
     CANNOT_PUBLISH: "CANNOT_PUBLISH",
+    PUBLICID_REQUIRED: "PUBLICID_REQUIRED",
+    CANNOT_UPDATE: "CANNOT_UPDATE",
+    FORM_EXPIRED: "FORM_EXPIRED",
+    FORM_NOT_AVAILABLE_YET: "FORM_NOT_AVAILABLE_YET",
 
 
   }

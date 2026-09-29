@@ -53,6 +53,14 @@ const formSchema = new mongoose.Schema({
     default: AVAILABILITY_TYPES.ALWAYS,
     required: true,
   },
+  startDate: {
+    type: Date,
+    default: null,
+  },
+  endDate: {
+    type: Date,
+    default: null
+  },
   fields: {
     type: [fieldSchema],
     default: [],
