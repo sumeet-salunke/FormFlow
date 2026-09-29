@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import { AVAILABILITY_TYPES } from "../constants/form.constants.js";
 
 export const createFormValidation = [
@@ -47,3 +47,11 @@ export const updateFormValidation = [
     .isArray()
     .withMessage("Fields must be an array."),
 ];
+
+export const publishFormValidation = [
+  param("formId")
+    .notEmpty()
+    .withMessage("Form ID is required.")
+    .isMongoId()
+    .withMessage("Invalid form Id."),
+]

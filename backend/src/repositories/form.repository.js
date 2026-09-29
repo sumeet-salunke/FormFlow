@@ -30,6 +30,21 @@ class FormRepository {
     });
   }
 
+  async publishForm(formId) {
+    return Form.findOneAndUpdate(
+      {
+        _id: formId,
+        status: FORM_STATUS.DRAFT,
+      }, {
+      $set: {
+        status: FORM_STATUS.PUBLISHED,
+      }
+    }, {
+      returnDocument: "after",
+      runValidators: true,
+    }
+    );
+  }
 }
 
 export default new FormRepository();

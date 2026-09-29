@@ -30,6 +30,8 @@ export const FORM = {
     FORM_FETCHED: "Forms fetched successfully",
     FORM_UPDATED: "Form updated successfully.",
     FORM_NOT_EDITABLE: "This form cannot be edited.",
+    CANNOT_PUBLISH: "Cannot publish form",
+    FORM_PUBLISHED: "Form published successfully",
 
   },
   CODES: {
@@ -40,6 +42,7 @@ export const FORM = {
     TITLE_REQUIRED: "TITLE_REQUIRED",
     FORMS_FETCHED: "FORMS_FETCHED",
     FORM_NOT_EDITABLE: "FORM_NOT_EDITABLE",
+    CANNOT_PUBLISH: "CANNOT_PUBLISH",
 
 
   }
