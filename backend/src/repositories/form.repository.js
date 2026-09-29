@@ -30,7 +30,7 @@ class FormRepository {
     });
   }
 
-  async publishForm(formId) {
+  async publishForm(formId, publicId) {
     return Form.findOneAndUpdate(
       {
         _id: formId,
@@ -38,6 +38,7 @@ class FormRepository {
       }, {
       $set: {
         status: FORM_STATUS.PUBLISHED,
+        publicId,
       }
     }, {
       returnDocument: "after",

@@ -18,6 +18,7 @@ const fieldSchema = new mongoose.Schema({
     type: [String],
     default: [],
   },
+
 }, { _id: true });
 
 
@@ -55,6 +56,12 @@ const formSchema = new mongoose.Schema({
   fields: {
     type: [fieldSchema],
     default: [],
+  },
+  publicId: {
+    type: String,
+    unique: true,
+    index: true,
+    default: null,
   }
 }, { timestamps: true });
 

@@ -2,6 +2,8 @@ import formRepository from "../repositories/form.repository.js";
 import ApiError from "../helpers/ApiError.js";
 import { FIELD_TYPES, FORM, FORM_STATUS } from "../constants/form.constants.js";
 import AUTH from "../constants/auth.constants.js";
+import generatePublicId from "../utils/publicId.js";
+
 
 class FormService {
   async createForm(userId, formData) {
@@ -73,6 +75,7 @@ class FormService {
       data: updatedForm,
     }
   }
+
   async getForm(formId, userId) {
     if (!formId) {
       throw new ApiError(
@@ -220,7 +223,9 @@ class FormService {
       }
     }
 
-    const publishedForm = await formRepository.publishForm(formId);
+    const publicId = generatePublicId();
+
+    const publishedForm = await formRepository.publishForm(formId, publicId);
 
     return {
       message: FORM.MESSAGES.FORM_PUBLISHED
