@@ -76,7 +76,7 @@ const MyForms = () => {
                   {new Date(form.createdAt).toLocaleDateString()}
                 </p>
 
-                <button type="button">
+                <button type="button" onClick={() => navigate(`/forms/${form._id}`)}>
                   View
                 </button>
 

@@ -68,6 +68,9 @@ const EditForm = () => {
     <div>
       <header>
         <h1>Edit form</h1>
+        <button type="button"
+          onClick={() => navigate(`/forms/${formId}/builder`)}
+        >Build Questions</button>
       </header>
 
       {error && <p>{error}</p>}
