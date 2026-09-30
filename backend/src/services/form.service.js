@@ -3,7 +3,6 @@ import ApiError from "../helpers/ApiError.js";
 import { AVAILABILITY_TYPES, FIELD_TYPES, FORM, FORM_STATUS } from "../constants/form.constants.js";
 import AUTH from "../constants/auth.constants.js";
 import generatePublicId from "../utils/publicId.js";
-import { buffer } from "stream/consumers";
 
 
 class FormService {
@@ -262,6 +261,7 @@ class FormService {
     if (!publicId) {
       throw new ApiError(400, FORM.MESSAGES.PUBLICID_REQUIRED, FORM.CODES.PUBLICID_REQUIRED);
     }
+
     const publicForm = await formRepository.findPublishedFormByPublicId(publicId);
 
     if (!publicForm) {

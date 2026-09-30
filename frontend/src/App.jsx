@@ -7,7 +7,7 @@ import CreateForm from "./pages/forms/CreateForm.jsx";
 import MyForms from "./pages/forms/MyForms.jsx";
 import EditForm from "./pages/forms/EditForm.jsx";
 import ViewForm from "./pages/forms/viewForm.jsx";
-
+import PublicForm from "./pages/forms/PublicForm.jsx";
 
 import FormBuilder from "./pages/forms/FormBuilder.jsx";
 
@@ -16,6 +16,7 @@ const App = () => {
   return <>
     <BrowserRouter>
       <Routes>
+        <Route path="/forms/public/:publicId" element={<PublicForm />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
 
         <Route path="/login" element={<Login />} />

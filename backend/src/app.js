@@ -11,6 +11,7 @@ import errorHandler from "./middlewares/errorHandler.js";
 
 import authRoutes from "./routes/auth.routes.js";
 import formRoutes from "./routes/form.routes.js";
+import responseRoutes from "./routes/response.routes.js";
 
 
 const app = express();
@@ -40,6 +41,7 @@ app.use(sessionConfig);
 app.use("/api/v1/health", healthRoutes);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/forms", formRoutes);
+app.use("/api/v1/responses", responseRoutes);
 
 
 // not found
