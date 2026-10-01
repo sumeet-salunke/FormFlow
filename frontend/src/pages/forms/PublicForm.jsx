@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getPublicForm } from "../../services/publicForm.service.js";
+import { submitResponse } from "../../services/response.service.js";
 
 const PublicForm = () => {
+  const navigate = useNavigate();
   const { publicId } = useParams();
 
   const [form, setForm] = useState(null);
   const [answers, setAnswers] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState("");
+  const [submitError, setSubmitError] = useState("");
 
   const handleAnswerChange = (fieldId, value) => {
     setAnswers((previous) => ({
@@ -36,9 +41,21 @@ const PublicForm = () => {
     });
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Submitted Answers: ", answers);
+    setSubmitting(true);
+    setSubmitError("");
+    setSubmitMessage("");
+    try {
+
+      const result = await submitResponse(publicId, answers);
+      navigate(`/forms/public/${publicId}/submitted`);
+      setSubmitMessage(result.message);
+    } catch (err) {
+      setSubmitError(err?.error?.message || "Unable to submit response.");
+    } finally {
+      setSubmitting(false);
+    }
 
   }
 
@@ -176,7 +193,9 @@ const PublicForm = () => {
             ))
           }
         </div>
-        <button type="submit">Submit</button>
+        {submitMessage && <p>{submitMessage}</p>}
+        {submitError && <p>{submitError}</p>}
+        <button type="submit" disabled={submitting}>{submitting ? "Submitting......." : "Submit Response"}</button>
       </form>
     </div>
   )

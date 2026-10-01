@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getFormById } from "../../services/form.service.js";
 
 const ViewForm = () => {
@@ -36,6 +36,7 @@ const ViewForm = () => {
         <p>Availability: {form.availability}</p>
         <button type="button" onClick={() => navigate(`/forms/${formId}/edit`)}>Edit</button>
         <button type="button" onClick={() => navigate("/forms")}>Back to My forms</button>
+        <button type="button" onClick={() => navigate(`/responses/form/${formId}`)}>Responses</button>
       </header>
       <main>
         <h2>

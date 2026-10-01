@@ -6,10 +6,13 @@ import Dashboard from "./pages/auth/Dashboard.jsx";
 import CreateForm from "./pages/forms/CreateForm.jsx";
 import MyForms from "./pages/forms/MyForms.jsx";
 import EditForm from "./pages/forms/EditForm.jsx";
-import ViewForm from "./pages/forms/viewForm.jsx";
+import ViewForm from "./pages/forms/ViewForm.jsx";
 import PublicForm from "./pages/forms/PublicForm.jsx";
 
 import FormBuilder from "./pages/forms/FormBuilder.jsx";
+import ResponseSubmitted from "./pages/forms/ResponseSubmitted.jsx";
+import FormResponses from "./pages/forms/FormResponses.jsx";
+
 
 
 const App = () => {
@@ -17,6 +20,11 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/forms/public/:publicId" element={<PublicForm />} />
+
+        <Route path="/forms/public/:publicId/submitted" element={<ResponseSubmitted />} />
+
+        <Route path="/responses/form/:formId" element={<FormResponses />} />
+
         <Route path="/" element={<Navigate to="/login" replace />} />
 
         <Route path="/login" element={<Login />} />

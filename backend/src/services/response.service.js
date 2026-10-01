@@ -179,6 +179,80 @@ class ResponseService {
     }
   }
 
+  async getFormResponses(userId, formId) {
+    if (!userId) {
+      throw new ApiError(401, RESPONSE.MESSAGES.UNAUTHORIZED, RESPONSE.CODES.UNAUTHORIZED);
+    }
+    if (!formId) {
+      throw new ApiError(400, RESPONSE.MESSAGES.FORMID_REQUIRED, RESPONSE.CODES.FORMID_REQUIRED);
+    }
+    const form = await formRepository.findById(formId);
+    if (!form) {
+      throw new ApiError(404, RESPONSE.MESSAGES.FORM_NOT_FOUND, RESPONSE.CODES.FORM_NOT_FOUND);
+    }
+    if (form.ownerId.toString() !== userId.toString()) {
+      throw new ApiError(403, RESPONSE.MESSAGES.FORBIDDEN, RESPONSE.CODES.FORBIDDEN
+      );
+    }
+    const responses = await responseRepository.findByFormId(formId);
+
+    return {
+      message: RESPONSE.MESSAGES.RESPONSES_FETCHED,
+      data: responses,
+    }
+  }
+
+  async deleteResponse(userId, responseId) {
+    if (!userId) {
+      throw new ApiError(401, RESPONSE.MESSAGES.UNAUTHORIZED, RESPONSE.CODES.UNAUTHORIZED);
+
+    }
+    if (!responseId) {
+      throw new ApiError(400, RESPONSE.MESSAGES.RESPONSEID_REQUIRED, RESPONSE.CODES.RESPONSEID_REQUIRED);
+    }
+    const response = await responseRepository.findById(responseId);
+
+    if (!response) {
+      throw new ApiError(404, RESPONSE.MESSAGES.RESPONSE_NOT_FOUND, RESPONSE.CODES.RESPONSE_NOT_FOUND);
+    }
+    const form = await formRepository.findById(response.formId);
+    if (form.ownerId.toString() !== userId.toString()) {
+      throw new ApiError(403, RESPONSE.MESSAGES.FORBIDDEN, RESPONSE.CODES.FORBIDDEN
+      );
+    }
+    await responseRepository.deleteById(responseId);
+
+    return {
+      message: RESPONSE.MESSAGES.RESPOSNE_DELETED,
+      data: null,
+    }
+  }
+
+  async deleteAllResponses(userId, formId) {
+    if (!userId) {
+      throw new ApiError(401, RESPONSE.MESSAGES.UNAUTHORIZED, RESPONSE.CODES.UNAUTHORIZED);
+
+    }
+    if (!formId) {
+      throw new ApiError(400, RESPONSE.MESSAGES.FORMID_REQUIRED, RESPONSE.CODES.FORMID_REQUIRED);
+    }
+    const form = await formRepository.findById(formId);
+
+    if (!form) {
+      throw new ApiError(404, RESPONSE.MESSAGES.FORM_NOT_FOUND, RESPONSE.CODES.FORM_NOT_FOUND);
+    }
+
+    if (form.ownerId.toString() !== userId.toString()) {
+      throw new ApiError(403, RESPONSE.MESSAGES.FORBIDDEN, RESPONSE.CODES.FORBIDDEN
+      );
+    }
+    await responseRepository.deleteByFormId(formId);
+
+    return {
+      message: RESPONSE.MESSAGES.ALL_RESPOSNE_DELETED,
+      data: null,
+    }
+  }
 }
 
 export default new ResponseService();

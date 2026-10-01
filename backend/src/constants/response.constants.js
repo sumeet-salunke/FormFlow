@@ -7,6 +7,13 @@ export const RESPONSE = {
     FORM_NOT_AVAILABLE_YET: "Form not available yet.",
     UNABLE_TO_SUBMIT: "Unable to submit the form.",
     RESPONSE_SUBMITTED: "Response submitted successfully",
+    UNAUTHORIZED: "Unauthorized.",
+    FORMID_REQUIRED: "FormId required.",
+    FORBIDDEN: "You are not allowed to perform this action.",
+    RESPONSE_NOT_FOUND: "Responses not found",
+    RESPONSES_FETCHED: "Responses fetched.",
+    RESPONSEID_REQUIRED: "responseId required.",
+    ALL_RESPOSNE_DELETED: "All responses deleted."
   },
   CODES: {
     PUBLICID_REQUIRED: "PUBLICID_REQUIRED",
@@ -15,5 +22,12 @@ export const RESPONSE = {
     FORM_NOT_PUBLISHED: "FORM_NOT_PUBLISHED",
     FORM_NOT_AVAILABLE_YET: "FORM_NOT_AVAILABLE_YET",
     UNABLE_TO_SUBMIT: "UNABLE_TO_SUBMIT",
+    UNAUTHORIZED: "UNAUTHORIZED",
+    FORMID_REQUIRED: "FORMID_REQUIRED",
+    FORBIDDEN: "FORBIDDEN",
+    RESPONSE_NOT_FOUND: "RESPONSE_NOT_FOUND",
+    RESPONSES_FETCHED: "RESPONSES_FETCHED",
+
+    RESPONSEID_REQUIRED: "RESPONSEID_REQUIRED",
   }
 };
