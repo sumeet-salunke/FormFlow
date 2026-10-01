@@ -1,6 +1,6 @@
 import { Router } from "express";
 import authenticate from "../middlewares/authenticate.js";
-import { submitResponse, getFormResponses, deleteResponse, deleteAllResponses } from "../controllers/response.controller.js";
+import { submitResponse, getFormResponses, deleteResponse, deleteAllResponses, updateResponse, getResponse } from "../controllers/response.controller.js";
 
 const router = Router();
 
@@ -8,6 +8,10 @@ const router = Router();
 router.post("/public/:publicId", submitResponse);
 
 router.get("/form/:formId", authenticate, getFormResponses);
+
+router.patch("/:responseId", authenticate, updateResponse);
+
+router.get("/:responseId", authenticate, getResponse);
 
 router.delete("/:responseId", authenticate, deleteResponse);
 

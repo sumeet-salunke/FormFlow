@@ -23,3 +23,18 @@ export const deleteResponse = (responseId) => {
 export const deleteAllResponses = (formId) => {
   return apiRequest(`/responses/form/${formId}`, { method: "DELETE" });
 };
+
+export const getResponse = (responseId) => {
+  return apiRequest(`/responses/${responseId}`, {
+    method: "GET",
+  });
+};
+
+
+export const updateResponse = (responseId, answers) => {
+  return apiRequest(`/responses/${responseId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ answers }),
+  });
+};
+

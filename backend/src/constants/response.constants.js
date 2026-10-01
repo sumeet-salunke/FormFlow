@@ -13,7 +13,8 @@ export const RESPONSE = {
     RESPONSE_NOT_FOUND: "Responses not found",
     RESPONSES_FETCHED: "Responses fetched.",
     RESPONSEID_REQUIRED: "responseId required.",
-    ALL_RESPOSNE_DELETED: "All responses deleted."
+    ALL_RESPOSNE_DELETED: "All responses deleted.",
+    RESPONSE_UPDATED: "Response updated successfully.",
   },
   CODES: {
     PUBLICID_REQUIRED: "PUBLICID_REQUIRED",

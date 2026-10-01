@@ -114,7 +114,8 @@ const FormResponses = () => {
                   })}
                   <td>{new Date(response.submittedAt).toLocaleString()}</td>
                   <td>
-                    <button type="button">
+                    <button type="button"
+                      onClick={() => navigate(`/responses/${response._id}/edit`)}>
                       Edit
                     </button>
                     <button type="button"

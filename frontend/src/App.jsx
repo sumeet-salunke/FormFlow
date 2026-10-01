@@ -12,7 +12,7 @@ import PublicForm from "./pages/forms/PublicForm.jsx";
 import FormBuilder from "./pages/forms/FormBuilder.jsx";
 import ResponseSubmitted from "./pages/forms/ResponseSubmitted.jsx";
 import FormResponses from "./pages/forms/FormResponses.jsx";
-
+import EditResponse from "./pages/forms/EditResponse.jsx";
 
 
 const App = () => {
@@ -22,6 +22,8 @@ const App = () => {
         <Route path="/forms/public/:publicId" element={<PublicForm />} />
 
         <Route path="/forms/public/:publicId/submitted" element={<ResponseSubmitted />} />
+
+        <Route path="/responses/:responseId/edit" element={<EditResponse />} />
 
         <Route path="/responses/form/:formId" element={<FormResponses />} />
 

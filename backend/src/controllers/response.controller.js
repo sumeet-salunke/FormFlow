@@ -21,3 +21,13 @@ export const deleteAllResponses = asyncHandler(async (req, res) => {
   const result = await responseService.deleteAllResponses(req.userId, req.params.formId);
   return res.status(200).json(new ApiResponse(200, result.message, result.data));
 });
+
+export const updateResponse = asyncHandler(async (req, res) => {
+  const result = responseService.updateResponse(req.userId, req.params.responseId, req.body.answers);
+  return res.status(200).json(new ApiResponse(200, result.message, result.data));
+});
+
+export const getResponse = asyncHandler(async (req, res) => {
+  const result = await responseService.getResponse(req.userId, req.params.responseId);
+  return res.status(200).json(new ApiResponse(200, result.message, result.data));
+});
