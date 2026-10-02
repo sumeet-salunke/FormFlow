@@ -1,19 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
-
-/* Main Body Styling */
-body {
-  margin: 0;
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: radial-gradient(circle at top left, #1a1c29, #0e1017);
+/* Auth Page Layout */
+.auth-container {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #f3f4f6;
+  padding: 1.5rem;
+  background: radial-gradient(circle at top left, #1a1c29, #0e1017);
 }
 
-/* Card Container (Targets the outer div in Login Component) */
-div:has(> form) {
+/* Card Container */
+.auth-card {
   width: 100%;
   max-width: 420px;
   padding: 2.5rem;
@@ -29,7 +25,7 @@ div:has(> form) {
 }
 
 /* Title */
-h1 {
+.auth-card .auth-title {
   font-size: 1.875rem;
   font-weight: 700;
   margin-top: 0;
@@ -41,15 +37,15 @@ h1 {
   -webkit-text-fill-color: transparent;
 }
 
-/* Form Container */
-form {
+/* Form */
+.auth-card .auth-form {
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
 }
 
 /* Input Fields */
-input {
+.auth-card .auth-input {
   width: 100%;
   padding: 0.875rem 1rem;
   background: rgba(255, 255, 255, 0.05);
@@ -63,32 +59,32 @@ input {
   transition: all 0.25s ease;
 }
 
-input::placeholder {
+.auth-card .auth-input::placeholder {
   color: #9ca3af;
 }
 
-input:hover {
+.auth-card .auth-input:hover {
   border-color: rgba(255, 255, 255, 0.25);
   background: rgba(255, 255, 255, 0.07);
 }
 
-input:focus {
+.auth-card .auth-input:focus {
   border-color: #6366f1;
   background: rgba(99, 102, 241, 0.05);
   box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
 }
 
 /* Autofill Fix for Dark Themes */
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus {
+.auth-card .auth-input:-webkit-autofill,
+.auth-card .auth-input:-webkit-autofill:hover,
+.auth-card .auth-input:-webkit-autofill:focus {
   -webkit-text-fill-color: #ffffff;
   -webkit-box-shadow: 0 0 0px 1000px #161824 inset;
   transition: background-color 5000s ease-in-out 0s;
 }
 
 /* Submit Button */
-button {
+.auth-card .auth-button {
   margin-top: 0.5rem;
   padding: 0.875rem 1.25rem;
   background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
@@ -101,26 +97,27 @@ button {
   cursor: pointer;
   transition: all 0.25s ease;
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+  width: 100%;
 }
 
-button:hover:not(:disabled) {
+.auth-card .auth-button:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
   background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
 }
 
-button:active:not(:disabled) {
+.auth-card .auth-button:active:not(:disabled) {
   transform: translateY(0);
 }
 
-button:disabled {
+.auth-card .auth-button:disabled {
   opacity: 0.65;
   cursor: not-allowed;
   box-shadow: none;
 }
 
-/* Feedback Paragraph Messages */
-p {
+/* Messages */
+.auth-card .auth-message {
   margin-top: 1.25rem;
   margin-bottom: 0;
   padding: 0.75rem 1rem;
@@ -132,18 +129,35 @@ p {
   animation: slideUp 0.3s ease-out;
 }
 
-/* Error message styling */
-p:last-child {
+.auth-card .auth-message.auth-error {
   background: rgba(239, 68, 68, 0.12);
   border: 1px solid rgba(239, 68, 68, 0.25);
   color: #fca5a5;
 }
 
-/* Success message styling */
-p:nth-last-child(2) {
+.auth-card .auth-message.auth-success {
   background: rgba(34, 197, 94, 0.12);
   border: 1px solid rgba(34, 197, 94, 0.25);
   color: #86efac;
+}
+
+/* Footer Link */
+.auth-card .auth-footer {
+  margin-top: 1.25rem;
+  margin-bottom: 0;
+  font-size: 0.875rem;
+  text-align: center;
+  color: #9ca3af;
+}
+
+.auth-card .auth-footer a {
+  color: #a5b4fc;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-card .auth-footer a:hover {
+  text-decoration: underline;
 }
 
 /* Animations */
@@ -152,7 +166,6 @@ p:nth-last-child(2) {
     opacity: 0;
     transform: translateY(12px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -164,7 +177,6 @@ p:nth-last-child(2) {
     opacity: 0;
     transform: translateY(6px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);

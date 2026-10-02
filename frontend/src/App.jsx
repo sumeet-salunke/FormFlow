@@ -13,35 +13,87 @@ import FormBuilder from "./pages/forms/FormBuilder.jsx";
 import ResponseSubmitted from "./pages/forms/ResponseSubmitted.jsx";
 import FormResponses from "./pages/forms/FormResponses.jsx";
 import EditResponse from "./pages/forms/EditResponse.jsx";
-
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 const App = () => {
-  return <>
+  return (
     <BrowserRouter>
       <Routes>
-        <Route path="/forms/public/:publicId" element={<PublicForm />} />
-
-        <Route path="/forms/public/:publicId/submitted" element={<ResponseSubmitted />} />
-
-        <Route path="/responses/:responseId/edit" element={<EditResponse />} />
-
-        <Route path="/responses/form/:formId" element={<FormResponses />} />
-
+        {/* Public Routes */}
         <Route path="/" element={<Navigate to="/login" replace />} />
-
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/forms/create" element={<CreateForm />} />
-        <Route path="/forms" element={<MyForms />} />
-        <Route path="/forms/:formId/edit" element={<EditForm />} />
-        <Route path="/forms/:formId" element={<ViewForm />} />
+        <Route path="/forms/public/:publicId" element={<PublicForm />} />
+        <Route path="/forms/public/:publicId/submitted" element={<ResponseSubmitted />} />
 
-        <Route path="/forms/:formId/builder" element={<FormBuilder />} />
-
+        {/* Protected Owner Routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/forms/create"
+          element={
+            <ProtectedRoute>
+              <CreateForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/forms"
+          element={
+            <ProtectedRoute>
+              <MyForms />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/forms/:formId"
+          element={
+            <ProtectedRoute>
+              <ViewForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/forms/:formId/edit"
+          element={
+            <ProtectedRoute>
+              <EditForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/forms/:formId/builder"
+          element={
+            <ProtectedRoute>
+              <FormBuilder />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/responses/form/:formId"
+          element={
+            <ProtectedRoute>
+              <FormResponses />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/responses/:responseId/edit"
+          element={
+            <ProtectedRoute>
+              <EditResponse />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
-  </>
+  );
 };
 
 export default App;

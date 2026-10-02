@@ -51,23 +51,22 @@ const FormResponses = () => {
   }
 
   const handleDeleteAllResponses = async (formId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete ALL responses for this form?"
+    );
+    if (!confirmed) return;
+
     setDeleting(true);
     setError("");
     try {
-      const confirmed = window.confirm(
-        "Are you sure you want to delete ALL responses for this form?"
-      );
-      if (!confirmed) return;
       await deleteAllResponses(formId);
       setResponses([]);
-
     } catch (err) {
       setError(err?.error?.message || "Unable to delete responses");
     } finally {
       setDeleting(false);
     }
-
-  }
+  };
 
   if (loading) {
     return <p>Loading responses.....</p>

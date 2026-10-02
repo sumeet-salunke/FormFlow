@@ -23,7 +23,7 @@ export const deleteAllResponses = asyncHandler(async (req, res) => {
 });
 
 export const updateResponse = asyncHandler(async (req, res) => {
-  const result = responseService.updateResponse(req.userId, req.params.responseId, req.body.answers);
+  const result = await responseService.updateResponse(req.userId, req.params.responseId, req.body.answers);
   return res.status(200).json(new ApiResponse(200, result.message, result.data));
 });
 

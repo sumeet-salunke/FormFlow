@@ -42,26 +42,39 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
+    <div className="auth-container">
+      <div className="auth-card">
+        <h1 className="auth-title">Login</h1>
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <input
+            className="auth-input"
+            name="email"
+            type="email"
+            placeholder="Email"
+            value={credentials.email}
+            onChange={handleChange}
+          />
 
-        <input name="email" type="email" placeholder="Email" value={credentials.email} onChange={handleChange} />
+          <input
+            className="auth-input"
+            name="password"
+            type="password"
+            placeholder="Password"
+            value={credentials.password}
+            onChange={handleChange}
+          />
 
-        <input name="password" type="password" placeholder="Password" value={credentials.password} onChange={handleChange} />
+          <button className="auth-button" type="submit" disabled={loading}>
+            {loading ? "Logging in....." : "Login"}
+          </button>
+        </form>
+        {message && <p className="auth-message auth-success">{message}</p>}
 
-
-        <button type="submit" disabled={loading}>
-          {loading ? "Logging in....." : "Login"}
-        </button>
-
-      </form>
-      {message && <p>{message}</p>}
-
-      {error && <p>{error}</p>}
-      <p>
-        Don't have an account? <Link to="/register">Register</Link>
-      </p>
+        {error && <p className="auth-message auth-error">{error}</p>}
+        <p className="auth-footer">
+          Don't have an account? <Link to="/register">Register</Link>
+        </p>
+      </div>
     </div>
   );
 };

@@ -5,7 +5,8 @@ const apiRequest = async (endpoint, options = {}) => {
     ...options,
     credentials: "include", //tells the browser, include cookies when communicating with the backend.
     headers: {
-      "Content-type": "application/json",
+      "Content-Type": "application/json",
+      "X-Requested-With": "XMLHttpRequest",
       ...options.headers,
     },
   });

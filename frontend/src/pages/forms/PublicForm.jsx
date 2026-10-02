@@ -47,8 +47,13 @@ const PublicForm = () => {
     setSubmitError("");
     setSubmitMessage("");
     try {
-
-      const result = await submitResponse(publicId, answers);
+      const submissionAnswers = { ...answers };
+      Object.keys(submissionAnswers).forEach((fieldId) => {
+        if (submissionAnswers[fieldId] === "") {
+          delete submissionAnswers[fieldId];
+        }
+      });
+      const result = await submitResponse(publicId, submissionAnswers);
       navigate(`/forms/public/${publicId}/submitted`);
       setSubmitMessage(result.message);
     } catch (err) {
@@ -116,8 +121,8 @@ const PublicForm = () => {
 
                 {field.type === "NUMBER" && (
                   <input type="number" name={field._id} required={field.required}
-                    value={answers[field._id] || ""}
-                    onChange={(event) => handleAnswerChange(field._id, event.target.value)} />
+                    value={answers[field._id] !== undefined && answers[field._id] !== null ? answers[field._id] : ""}
+                    onChange={(event) => handleAnswerChange(field._id, event.target.value === "" ? "" : Number(event.target.value))} />
                 )}
 
                 {field.type === "EMAIL" && (
@@ -131,7 +136,7 @@ const PublicForm = () => {
                     <input
                       type="date"
                       name={field._id}
-                      required={form.required}
+                      required={field.required}
                       value={answers[field._id] || ""}
                       onChange={(event) => handleAnswerChange(field._id, event.target.value)} />
                   )

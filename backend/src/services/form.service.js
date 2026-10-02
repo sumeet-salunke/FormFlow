@@ -47,6 +47,9 @@ class FormService {
     if (!form) {
       throw new ApiError(404, FORM.MESSAGES.FORM_NOT_FOUND, FORM.CODES.FORM_NOT_FOUND);
     }
+    if (form.ownerId.toString() !== userId.toString()) {
+      throw new ApiError(403, FORM.MESSAGES.FORBIDDEN, FORM.CODES.FORBIDDEN);
+    }
     if (form.status !== FORM_STATUS.DRAFT) {
       throw new ApiError(400, FORM.MESSAGES.FORM_NOT_EDITABLE, FORM.CODES.FORM_NOT_EDITABLE);
     }
@@ -88,7 +91,7 @@ class FormService {
       updateData.endDate = newEndDate;
     }
 
-    const updatedForm = await formRepository.updateDraftForm(formId, updateData);
+    const updatedForm = await formRepository.updateDraftForm(formId, userId, updateData);
 
     if (!updatedForm) {
       throw new ApiError(400, FORM.MESSAGES.FORM_NOT_EDITABLE, FORM.CODES.FORM_NOT_EDITABLE);
@@ -246,6 +249,27 @@ class FormService {
       }
     }
 
+    if (form.availability === AVAILABILITY_TYPES.SCHEDULED) {
+      if (!form.startDate || !form.endDate) {
+        throw new ApiError(
+          400,
+          FORM.MESSAGES.CANNOT_PUBLISH,
+          FORM.CODES.CANNOT_PUBLISH
+        );
+      }
+
+      const start = new Date(form.startDate);
+      const end = new Date(form.endDate);
+
+      if (isNaN(start.getTime()) || isNaN(end.getTime()) || start >= end) {
+        throw new ApiError(
+          400,
+          FORM.MESSAGES.CANNOT_PUBLISH,
+          FORM.CODES.CANNOT_PUBLISH
+        );
+      }
+    }
+
     const publicId = generatePublicId();
 
     const publishedForm = await formRepository.publishForm(formId, publicId);
@@ -315,13 +339,24 @@ class FormService {
     if (form.ownerId.toString() !== userId.toString()) {
       throw new ApiError(403, FORM.MESSAGES.FORBIDDEN, FORM.CODES.FORBIDDEN);
     }
-    const isValidTransition = (form.status === FORM_STATUS.PUBLISHED && status === FORM_STATUS.CLOSED) || (form.status === FORM_STATUS.CLOSED && status === FORM_STATUS.PUBLISHED);
-    if (!isValidTransition) {
-      throw new ApiError(400, FORM.MESSAGES.FORM_STATUS_CHANGE_NOT_ALLOWED, FORM.CODES.FORM_STATUS_CHANGE_NOT_ALLOWED);
+    const expectedStatus =
+      status === FORM_STATUS.CLOSED ? FORM_STATUS.PUBLISHED : FORM_STATUS.CLOSED;
+
+    if (form.status !== expectedStatus) {
+      throw new ApiError(
+        400,
+        FORM.MESSAGES.FORM_STATUS_CHANGE_NOT_ALLOWED,
+        FORM.CODES.FORM_STATUS_CHANGE_NOT_ALLOWED
+      );
     }
-    const updatedForm = await formRepository.updateStatus(formId, status);
+
+    const updatedForm = await formRepository.updateStatus(formId, userId, expectedStatus, status);
     if (!updatedForm) {
-      throw new ApiError(400, FORM.MESSAGES.FORM_STATUS_CHANGE_NOT_ALLOWED, FORM.CODES.FORM_STATUS_CHANGE_NOT_ALLOWED);
+      throw new ApiError(
+        400,
+        FORM.MESSAGES.FORM_STATUS_CHANGE_NOT_ALLOWED,
+        FORM.CODES.FORM_STATUS_CHANGE_NOT_ALLOWED
+      );
     }
     const message = status === FORM_STATUS.CLOSED ? FORM.MESSAGES.FORM_HALTED : FORM.MESSAGES.FORM_RESUMED;
     return {

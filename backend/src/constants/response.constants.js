@@ -13,6 +13,9 @@ export const RESPONSE = {
     RESPONSE_NOT_FOUND: "Responses not found",
     RESPONSES_FETCHED: "Responses fetched.",
     RESPONSEID_REQUIRED: "responseId required.",
+    RESPONSE_DELETED: "Response deleted successfully.",
+    ALL_RESPONSES_DELETED: "All responses deleted.",
+    RESPOSNE_DELETED: "Response deleted successfully.",
     ALL_RESPOSNE_DELETED: "All responses deleted.",
     RESPONSE_UPDATED: "Response updated successfully.",
   },
@@ -28,7 +31,8 @@ export const RESPONSE = {
     FORBIDDEN: "FORBIDDEN",
     RESPONSE_NOT_FOUND: "RESPONSE_NOT_FOUND",
     RESPONSES_FETCHED: "RESPONSES_FETCHED",
-
+    RESPONSE_DELETED: "RESPONSE_DELETED",
+    ALL_RESPONSES_DELETED: "ALL_RESPONSES_DELETED",
     RESPONSEID_REQUIRED: "RESPONSEID_REQUIRED",
   }
 };

@@ -42,3 +42,16 @@ export const editProfile = (userData) => {
     body: JSON.stringify(userData),
   });
 };
+
+export const changePassword = (passwordData) => {
+  return apiRequest("/auth/password", {
+    method: "PATCH",
+    body: JSON.stringify(passwordData),
+  });
+};
+
+export const deleteAccount = () => {
+  return apiRequest("/auth/me", {
+    method: "DELETE",
+  });
+};

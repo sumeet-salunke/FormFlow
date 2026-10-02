@@ -2,6 +2,25 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { updateForm, getFormById } from "../../services/form.service.js";
 
+const toDatetimeLocal = (isoString) => {
+  if (!isoString) return "";
+  const date = new Date(isoString);
+  if (isNaN(date.getTime())) return "";
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
+const fromDatetimeLocal = (localString) => {
+  if (!localString) return null;
+  const date = new Date(localString);
+  if (isNaN(date.getTime())) return null;
+  return date.toISOString();
+};
+
 const EditForm = () => {
   const { formId } = useParams();
   const navigate = useNavigate();
@@ -28,8 +47,8 @@ const EditForm = () => {
           title: form.title,
           description: form.description,
           availability: form.availability,
-          startDate: form.startDate ? form.startDate.slice(0, 16) : "",
-          endDate: form.endDate ? form.endDate.slice(0, 16) : "",
+          startDate: toDatetimeLocal(form.startDate),
+          endDate: toDatetimeLocal(form.endDate),
           fields: form.fields ?? [],
         });
       } catch (err) {
@@ -55,13 +74,26 @@ const EditForm = () => {
     setSaving(true);
     setMessage("");
     try {
-      const result = await updateForm(formId, formData);
+      const payload = {
+        title: formData.title,
+        description: formData.description,
+        availability: formData.availability,
+        fields: formData.fields,
+        startDate:
+          formData.availability === "SCHEDULED" && formData.startDate
+            ? fromDatetimeLocal(formData.startDate)
+            : null,
+        endDate:
+          formData.availability === "SCHEDULED" && formData.endDate
+            ? fromDatetimeLocal(formData.endDate)
+            : null,
+      };
+      const result = await updateForm(formId, payload);
       setMessage(result.message);
       navigate(`/forms/${formId}`);
     } catch (err) {
       setError(err?.error?.message || "Unable to update form");
-    }
-    finally {
+    } finally {
       setSaving(false);
     }
   };

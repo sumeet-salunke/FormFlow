@@ -35,10 +35,10 @@ export const FORM = {
     PUBLICID_REQUIRED: "PublicId is required.",
     FORM_NOT_PUBLISHED: "Form not published yet.",
     CANNOT_UPDATE: "Cannot edit form",
-    FORM_NOT_AVAILABLE_YET: "This form is no longer accepting responses.",
+    FORM_NOT_AVAILABLE_YET: "This form is not available yet.",
     FORM_EXPIRED: "This form is no longer accepting responses.",
-    FORM_HALTED: "Form has been closed. ",
-    FORM_RESUMED: "Formhas been resumed.",
+    FORM_HALTED: "Form has been closed.",
+    FORM_RESUMED: "Form has been resumed.",
     FORM_STATUS_CHANGE_NOT_ALLOWED: "This form status cannot be changed.",
     INVALID_FORM_STATUS: "Invalid form status.",
 

@@ -29,6 +29,10 @@ class ResponseRepository {
     return Response.deleteMany({ formId });
   }
 
+  async deleteByFormIds(formIds) {
+    return Response.deleteMany({ formId: { $in: formIds } });
+  }
+
 }
 
 export default new ResponseRepository();

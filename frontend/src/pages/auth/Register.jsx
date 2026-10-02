@@ -47,28 +47,57 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <h1>Create Account</h1>
-      <form onSubmit={handleSubmit}>
-        <input name="name" type="text" placeholder="Name" value={formData.name} onChange={handleChange} />
+    <div className="auth-container">
+      <div className="auth-card">
+        <h1 className="auth-title">Create Account</h1>
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <input
+            className="auth-input"
+            name="name"
+            type="text"
+            placeholder="Name"
+            value={formData.name}
+            onChange={handleChange}
+          />
 
-        <input name="email" type="email" placeholder="Email" value={formData.email} onChange={handleChange} />
+          <input
+            className="auth-input"
+            name="email"
+            type="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+          />
 
-        <input name="password" type="password" placeholder="Password" value={formData.password} onChange={handleChange} />
+          <input
+            className="auth-input"
+            name="password"
+            type="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+          />
 
-        <input name="confirmPassword" type="password" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleChange} />
+          <input
+            className="auth-input"
+            name="confirmPassword"
+            type="password"
+            placeholder="Confirm Password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+          />
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Creating account....." : "Create Account"}
-        </button>
+          <button className="auth-button" type="submit" disabled={loading}>
+            {loading ? "Creating account....." : "Create Account"}
+          </button>
+        </form>
+        {message && <p className="auth-message auth-success">{message}</p>}
 
-      </form>
-      {message && <p>{message}</p>}
-
-      {error && <p>{error}</p>}
-      <p>
-        Already have an account? <Link to="/login">Login</Link>
-      </p>
+        {error && <p className="auth-message auth-error">{error}</p>}
+        <p className="auth-footer">
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
+      </div>
     </div>
   );
 };

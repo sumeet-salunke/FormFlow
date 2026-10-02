@@ -48,6 +48,17 @@ export const editProfile = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, result.message, result.data));
 });
 
+export const changePassword = asyncHandler(async (req, res) => {
+  const result = await authService.changePassword(req.userId, req.body);
+  return res.status(200).json(new ApiResponse(200, result.message, result.data));
+});
+
+export const deleteAccount = asyncHandler(async (req, res) => {
+  const result = await authService.deleteAccount(req.userId);
+  req.session = null;
+  return res.status(200).json(new ApiResponse(200, result.message, result.data));
+});
+
 /*
 Login
   ↓

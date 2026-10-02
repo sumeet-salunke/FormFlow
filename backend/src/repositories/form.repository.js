@@ -18,9 +18,10 @@ class FormRepository {
     }).sort({ createdAt: -1 });
   }
 
-  async updateDraftForm(formId, updateData) {
+  async updateDraftForm(formId, ownerId, updateData) {
     return Form.findOneAndUpdate({
       _id: formId,
+      ownerId,
       status: FORM_STATUS.DRAFT,
     }, {
       $set: updateData,
@@ -51,16 +52,25 @@ class FormRepository {
     return Form.findOne({ publicId });
   }
 
-  async updateStatus(formId, status) {
-    return Form.findByIdAndUpdate(
-      formId,
+  async updateStatus(formId, ownerId, expectedStatus, newStatus) {
+    return Form.findOneAndUpdate(
       {
-        $set: { status }
-      }, {
-      returnDocument: "after",
-      runValidators: true,
-    }
-    )
+        _id: formId,
+        ownerId,
+        status: expectedStatus,
+      },
+      {
+        $set: { status: newStatus },
+      },
+      {
+        returnDocument: "after",
+        runValidators: true,
+      }
+    );
+  }
+
+  async deleteByOwnerId(ownerId) {
+    return Form.deleteMany({ ownerId });
   }
 }
 

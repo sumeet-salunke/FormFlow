@@ -22,11 +22,11 @@ const FormBuilder = () => {
         fields
       });
       setMessage(result.message);
+      navigate(`/forms/${formId}/edit`);
     } catch (err) {
       setError(err?.error?.message || "Unable to save questions.");
     } finally {
       setSaving(false);
-      navigate(`/forms/${formId}/edit`);
     }
   }
 

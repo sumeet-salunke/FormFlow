@@ -58,8 +58,13 @@ class ResponseService {
 
     const hasInvalidValue = form.fields.some((field) => {
       const value = answers[field._id.toString()];
-      //optional field with no answer is valid
-      if (!field.required && (value === undefined || value === null)) {
+      // optional field with no answer (or empty string) is valid and treated as unanswered
+      if (
+        !field.required &&
+        (value === undefined ||
+          value === null ||
+          (typeof value === "string" && value.trim() === ""))
+      ) {
         return false;
       }
 
@@ -334,14 +339,24 @@ class ResponseService {
       throw new ApiError(404, RESPONSE.MESSAGES.RESPONSE_NOT_FOUND, RESPONSE.CODES.RESPONSE_NOT_FOUND);
     }
     const form = await formRepository.findById(response.formId);
+    if (!form) {
+      throw new ApiError(
+        404,
+        RESPONSE.MESSAGES.FORM_NOT_FOUND,
+        RESPONSE.CODES.FORM_NOT_FOUND
+      );
+    }
     if (form.ownerId.toString() !== userId.toString()) {
-      throw new ApiError(403, RESPONSE.MESSAGES.FORBIDDEN, RESPONSE.CODES.FORBIDDEN
+      throw new ApiError(
+        403,
+        RESPONSE.MESSAGES.FORBIDDEN,
+        RESPONSE.CODES.FORBIDDEN
       );
     }
     await responseRepository.deleteById(responseId);
 
     return {
-      message: RESPONSE.MESSAGES.RESPOSNE_DELETED,
+      message: RESPONSE.MESSAGES.RESPONSE_DELETED,
       data: null,
     }
   }
@@ -367,7 +382,7 @@ class ResponseService {
     await responseRepository.deleteByFormId(formId);
 
     return {
-      message: RESPONSE.MESSAGES.ALL_RESPOSNE_DELETED,
+      message: RESPONSE.MESSAGES.ALL_RESPONSES_DELETED,
       data: null,
     }
   }

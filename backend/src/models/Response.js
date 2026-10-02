@@ -20,6 +20,7 @@ const responseSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Form",
     required: true,
+    index: true,
   },
   answers: {
     type: [answerSchema],

@@ -5,6 +5,8 @@ import sessionConfig from "./config/session.js";
 
 import env from "./config/env.js";
 import healthRoutes from "./routes/health.routes.js";
+import { globalLimiter } from "./middlewares/rateLimiter.js";
+import csrfProtection from "./middlewares/csrfProtection.js";
 
 import notFound from "./middlewares/notFound.js";
 import errorHandler from "./middlewares/errorHandler.js";
@@ -31,6 +33,7 @@ app.use(helmet());
 app.use(cors({
   origin: env.clientUrl,
   credentials: true,
+  allowedHeaders: ["Content-Type", "X-Requested-With", "X-FormFlow-Request"],
 }));
 //request body parsing-> Allow express to read JSON request bodies
 app.use(express.json());
@@ -39,6 +42,8 @@ app.use(express.json());
 app.use(sessionConfig);
 //routes
 app.use("/api/v1/health", healthRoutes);
+app.use("/api/v1", globalLimiter);
+app.use("/api/v1", csrfProtection);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/forms", formRoutes);
 app.use("/api/v1/responses", responseRoutes);

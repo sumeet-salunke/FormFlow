@@ -6,8 +6,8 @@ const sessionConfig = cookieSession({
 
   keys: [env.sessionSecret],
   httpOnly: true,
-  secure: env.nodeEnv === "production",
-  sameSite: env.nodeEnv === "production" ? "none" : "lax",
+  secure: env.nodeEnv === "production" || process.env.COOKIE_SAMESITE === "none",
+  sameSite: process.env.COOKIE_SAMESITE || "lax",
   maxAge: 1000 * 60 * 60 * 24 * 7,
 });
 

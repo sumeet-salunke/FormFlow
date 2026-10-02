@@ -30,6 +30,29 @@ class UserRepository {
     },
     );
   }
+
+  async findByIdWithPassword(userId) {
+    return User.findById(userId).select("+passwordHash");
+  }
+
+  async updatePassword(userId, passwordHash) {
+    return User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          passwordHash,
+        },
+      },
+      {
+        returnDocument: "after",
+        runValidators: true,
+      }
+    );
+  }
+
+  async deleteById(userId) {
+    return User.findByIdAndDelete(userId);
+  }
 }
 
 export default new UserRepository();

@@ -1,5 +1,7 @@
 import { hashPassword, verifyPassword } from "../utils/password.js";
 import userRepository from "../repositories/user.repository.js";
+import formRepository from "../repositories/form.repository.js";
+import responseRepository from "../repositories/response.repository.js";
 import ApiError from "../helpers/ApiError.js";
 import AUTH from "../constants/auth.constants.js";
 
@@ -114,6 +116,74 @@ class AuthService {
       }
     };
 
+  }
+
+  async changePassword(userId, { currentPassword, newPassword }) {
+    if (!userId) {
+      throw new ApiError(401, AUTH.MESSAGES.UNAUTHORIZED, AUTH.CODES.UNAUTHORIZED);
+    }
+
+    const user = await userRepository.findByIdWithPassword(userId);
+    if (!user) {
+      throw new ApiError(404, AUTH.MESSAGES.USER_NOT_FOUND, AUTH.CODES.USER_NOT_FOUND);
+    }
+
+    const isCurrentValid = await verifyPassword(currentPassword, user.passwordHash);
+    if (!isCurrentValid) {
+      throw new ApiError(
+        400,
+        AUTH.MESSAGES.INVALID_CURRENT_PASSWORD,
+        AUTH.CODES.INVALID_CURRENT_PASSWORD
+      );
+    }
+
+    const isSamePassword = await verifyPassword(newPassword, user.passwordHash);
+    if (isSamePassword) {
+      throw new ApiError(
+        400,
+        AUTH.MESSAGES.SAME_PASSWORD,
+        AUTH.CODES.SAME_PASSWORD
+      );
+    }
+
+    const passwordHash = await hashPassword(newPassword);
+    await userRepository.updatePassword(userId, passwordHash);
+
+    return {
+      message: AUTH.MESSAGES.PASSWORD_CHANGED,
+      data: null,
+    };
+  }
+
+  async deleteAccount(userId) {
+    if (!userId) {
+      throw new ApiError(401, AUTH.MESSAGES.UNAUTHORIZED, AUTH.CODES.UNAUTHORIZED);
+    }
+
+    const user = await userRepository.findById(userId);
+    if (!user) {
+      throw new ApiError(404, AUTH.MESSAGES.USER_NOT_FOUND, AUTH.CODES.USER_NOT_FOUND);
+    }
+
+    // Find all forms owned by this user
+    const userForms = await formRepository.findOwnerById(userId);
+    const formIds = userForms.map((form) => form._id);
+
+    // Delete all responses associated with the user's forms
+    if (formIds.length > 0) {
+      await responseRepository.deleteByFormIds(formIds);
+    }
+
+    // Delete all forms owned by the user
+    await formRepository.deleteByOwnerId(userId);
+
+    // Delete the user document
+    await userRepository.deleteById(userId);
+
+    return {
+      message: AUTH.MESSAGES.ACCOUNT_DELETED,
+      data: null,
+    };
   }
 }
 export default new AuthService();

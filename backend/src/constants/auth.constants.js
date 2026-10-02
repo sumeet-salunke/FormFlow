@@ -8,6 +8,11 @@ const AUTH = {
     UNAUTHORIZED: "Authentication required.",
     LOGIN_SUCCESS: "Login success.",
     LOGOUT_SUCCESS: "Logout success.",
+    UPDATE_SUCCESS: "Profile updated successfully.",
+    PASSWORD_CHANGED: "Password changed successfully.",
+    ACCOUNT_DELETED: "Account deleted successfully.",
+    INVALID_CURRENT_PASSWORD: "Current password is incorrect.",
+    SAME_PASSWORD: "New password must be different from current password.",
     INTERNAL_SERVER_ERROR: "Internal server error.",
   },
 
@@ -16,8 +21,13 @@ const AUTH = {
     INVALID_CREDENTIALS: "INVALID_CREDENTIALS",
     USER_NOT_FOUND: "USER_NOT_FOUND",
     UNAUTHORIZED: "UNAUTHORIZED",
-    LOGOUT_SUCCESS: "Logout success.",
-    INTERNAL_SERVER_ERROR: "Internal server error.",
+    UPDATE_SUCCESS: "UPDATE_SUCCESS",
+    PASSWORD_CHANGED: "PASSWORD_CHANGED",
+    ACCOUNT_DELETED: "ACCOUNT_DELETED",
+    INVALID_CURRENT_PASSWORD: "INVALID_CURRENT_PASSWORD",
+    SAME_PASSWORD: "SAME_PASSWORD",
+    LOGOUT_SUCCESS: "LOGOUT_SUCCESS",
+    INTERNAL_SERVER_ERROR: "INTERNAL_SERVER_ERROR",
 
   },
 };

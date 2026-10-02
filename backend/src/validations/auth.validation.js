@@ -55,3 +55,25 @@ export const editProfileValidation = [
     .isLength({ max: 100 })
     .withMessage("Name must not exceed 100 characters"),
 ];
+
+export const changePasswordValidation = [
+  body("currentPassword")
+    .notEmpty()
+    .withMessage("Current password is required."),
+
+  body("newPassword")
+    .notEmpty()
+    .withMessage("New password is required.")
+    .isLength({ min: 8 })
+    .withMessage("New password must be at least 8 characters."),
+
+  body("confirmPassword")
+    .notEmpty()
+    .withMessage("Please confirm your new password.")
+    .custom((confirmPassword, { req }) => {
+      if (confirmPassword !== req.body.newPassword) {
+        throw new Error("Passwords do not match.");
+      }
+      return true;
+    }),
+];

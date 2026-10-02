@@ -5,7 +5,7 @@ import { FORM_STATUS, AVAILABILITY_TYPES, FIELD_TYPES } from "../constants/form.
 const fieldSchema = new mongoose.Schema({
   type: {
     type: String,
-    emum: Object.values(FIELD_TYPES),
+    enum: Object.values(FIELD_TYPES),
     required: true,
   },
   label: {
@@ -13,6 +13,10 @@ const fieldSchema = new mongoose.Schema({
     required: true,
     trim: true,
     maxLength: 500,
+  },
+  required: {
+    type: Boolean,
+    default: false,
   },
   options: {
     type: [String],
@@ -68,7 +72,7 @@ const formSchema = new mongoose.Schema({
   publicId: {
     type: String,
     unique: true,
-    index: true,
+    sparse: true,
     default: null,
   }
 }, { timestamps: true });
