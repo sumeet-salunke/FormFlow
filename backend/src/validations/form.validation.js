@@ -1,5 +1,5 @@
 import { body, param } from "express-validator";
-import { AVAILABILITY_TYPES } from "../constants/form.constants.js";
+import { AVAILABILITY_TYPES, FORM_STATUS } from "../constants/form.constants.js";
 
 export const createFormValidation = [
   body("title")
@@ -65,4 +65,12 @@ export const publishFormValidation = [
     .withMessage("Form ID is required.")
     .isMongoId()
     .withMessage("Invalid form Id."),
+]
+
+export const updateFormStatusValidation = [
+  body("status")
+    .notEmpty()
+    .withMessage("Status is required.")
+    .isIn([FORM_STATUS.PUBLISHED, FORM_STATUS.CLOSED])
+    .withMessage("Status must be PUBLISHED or CLOSED."),
 ]

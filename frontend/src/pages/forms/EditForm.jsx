@@ -9,6 +9,8 @@ const EditForm = () => {
     title: "",
     description: "",
     availability: "ALWAYS",
+    startDate: "",
+    endDate: "",
     fields: [],
   });
   const [loading, setLoading] = useState(true);
@@ -25,7 +27,9 @@ const EditForm = () => {
         setFormData({
           title: form.title,
           description: form.description,
-          availability: form.avaliability,
+          availability: form.availability,
+          startDate: form.startDate ? form.startDate.slice(0, 16) : "",
+          endDate: form.endDate ? form.endDate.slice(0, 16) : "",
           fields: form.fields ?? [],
         });
       } catch (err) {
@@ -53,12 +57,12 @@ const EditForm = () => {
     try {
       const result = await updateForm(formId, formData);
       setMessage(result.message);
+      navigate(`/forms/${formId}`);
     } catch (err) {
       setError(err?.error?.message || "Unable to update form");
     }
     finally {
       setSaving(false);
-      navigate("/forms");
     }
   };
   if (loading) {
@@ -91,6 +95,37 @@ const EditForm = () => {
             <option value="ALWAYS">Always</option>
             <option value="SCHEDULED">Scheduled</option>
           </select>
+          {formData.availability === "SCHEDULED" && (
+            <div>
+              <div>
+                <label htmlFor="startDate">
+                  Start Date
+                </label>
+
+                <input
+                  id="startDate"
+                  name="startDate"
+                  type="datetime-local"
+                  value={formData.startDate}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="endDate">
+                  End Date
+                </label>
+
+                <input
+                  id="endDate"
+                  name="endDate"
+                  type="datetime-local"
+                  value={formData.endDate}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+          )}
         </div>
         <button type="submit" disabled={saving}>{saving ? "Saving....." : "Save Changes"}</button>
         <button type="button" onClick={() => navigate("/forms")}>Cancel</button>

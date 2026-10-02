@@ -47,3 +47,8 @@ export const getPublicForm = asyncHandler(async (req, res) => {
   const result = await formService.getPublicForm(req.params.publicId);
   return res.status(200).json(new ApiResponse(200, result.message, result.data));
 });
+
+export const updateFormStatus = asyncHandler(async (req, res) => {
+  const result = await formService.updateFormStatus(req.userId, req.params.formId, req.body.status);
+  return res.status(200).json(new ApiResponse(200, result.message, result.data));
+});

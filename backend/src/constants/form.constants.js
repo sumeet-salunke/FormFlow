@@ -37,6 +37,10 @@ export const FORM = {
     CANNOT_UPDATE: "Cannot edit form",
     FORM_NOT_AVAILABLE_YET: "This form is no longer accepting responses.",
     FORM_EXPIRED: "This form is no longer accepting responses.",
+    FORM_HALTED: "Form has been closed. ",
+    FORM_RESUMED: "Formhas been resumed.",
+    FORM_STATUS_CHANGE_NOT_ALLOWED: "This form status cannot be changed.",
+    INVALID_FORM_STATUS: "Invalid form status.",
 
   },
   CODES: {
@@ -52,6 +56,10 @@ export const FORM = {
     CANNOT_UPDATE: "CANNOT_UPDATE",
     FORM_EXPIRED: "FORM_EXPIRED",
     FORM_NOT_AVAILABLE_YET: "FORM_NOT_AVAILABLE_YET",
+    FORM_HALTED: "FORM_HALTED",
+    FORM_RESUMED: "FORM_RESUMED",
+    FORM_STATUS_CHANGE_NOT_ALLOWED: "FORM_STATUS_CHANGE_NOT_ALLOWED",
+    INVALID_FORM_STATUS: "INVALID_FORM_STATUS",
 
 
   }

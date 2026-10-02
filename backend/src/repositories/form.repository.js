@@ -50,6 +50,18 @@ class FormRepository {
   async findPublishedFormByPublicId(publicId) {
     return Form.findOne({ publicId });
   }
+
+  async updateStatus(formId, status) {
+    return Form.findByIdAndUpdate(
+      formId,
+      {
+        $set: { status }
+      }, {
+      returnDocument: "after",
+      runValidators: true,
+    }
+    )
+  }
 }
 
 export default new FormRepository();

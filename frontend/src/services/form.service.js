@@ -23,3 +23,10 @@ export const updateForm = (formId, formData) => {
 export const getFormById = (formId) => {
   return apiRequest(`/forms/${formId}`);
 };
+
+export const updateFormStatus = (formId, status) => {
+  return apiRequest(`/forms/${formId}/status`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
+  });
+};

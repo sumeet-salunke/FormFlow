@@ -297,6 +297,38 @@ class FormService {
       },
     }
   }
+
+  async updateFormStatus(userId, formId, status) {
+    if (!userId) {
+      throw new ApiError(401, AUTH.MESSAGES.UNAUTHORIZED, AUTH.CODES.UNAUTHORIZED);
+    }
+    if (!formId) {
+      throw new ApiError(400, FORM.MESSAGES.FORM_ID_REQUIRED, FORM.CODES.FORM_ID_REQUIRED);
+    }
+    if (![FORM_STATUS.PUBLISHED, FORM_STATUS.CLOSED].includes(status)) {
+      throw new ApiError(400, FORM.MESSAGES.INVALID_FORM_STATUS, FORM.CODES.INVALID_FORM_STATUS);
+    }
+    const form = await formRepository.findById(formId);
+    if (!form) {
+      throw new ApiError(404, FORM.MESSAGES.FORM_NOT_FOUND, FORM.CODES.FORM_NOT_FOUND);
+    }
+    if (form.ownerId.toString() !== userId.toString()) {
+      throw new ApiError(403, FORM.MESSAGES.FORBIDDEN, FORM.CODES.FORBIDDEN);
+    }
+    const isValidTransition = (form.status === FORM_STATUS.PUBLISHED && status === FORM_STATUS.CLOSED) || (form.status === FORM_STATUS.CLOSED && status === FORM_STATUS.PUBLISHED);
+    if (!isValidTransition) {
+      throw new ApiError(400, FORM.MESSAGES.FORM_STATUS_CHANGE_NOT_ALLOWED, FORM.CODES.FORM_STATUS_CHANGE_NOT_ALLOWED);
+    }
+    const updatedForm = await formRepository.updateStatus(formId, status);
+    if (!updatedForm) {
+      throw new ApiError(400, FORM.MESSAGES.FORM_STATUS_CHANGE_NOT_ALLOWED, FORM.CODES.FORM_STATUS_CHANGE_NOT_ALLOWED);
+    }
+    const message = status === FORM_STATUS.CLOSED ? FORM.MESSAGES.FORM_HALTED : FORM.MESSAGES.FORM_RESUMED;
+    return {
+      message,
+      data: updatedForm,
+    };
+  }
 }
 
 export default new FormService();

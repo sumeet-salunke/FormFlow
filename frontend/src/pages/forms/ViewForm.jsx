@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getFormById } from "../../services/form.service.js";
+import { getFormById, updateFormStatus } from "../../services/form.service.js";
 
 const ViewForm = () => {
 
@@ -24,19 +24,50 @@ const ViewForm = () => {
     };
     loadFrom();
   }, [formId]);
+
+  const handleFormStatusChange = async () => {
+    setError("");
+    const newStatus = form.status === "PUBLISHED" ? "CLOSED" : "PUBLISHED";
+    try {
+      const result = await updateFormStatus(formId, newStatus);
+      setForm(result.data);
+      navigate("/forms");
+
+    } catch (err) {
+      setError(err?.error?.message || "Unable to change status.")
+    }
+  }
+
   if (loading) {
     return <p>Loading form....</p>
+  }
+  if (error) {
+    return <p>{error}</p>
   }
   return (
     <div>
       <header>
         <h1>{form.title}</h1>
         {form.description && <p>{form.description}</p>}
+
         <p>Status: {form.status}</p>
+
         <p>Availability: {form.availability}</p>
+
         <button type="button" onClick={() => navigate(`/forms/${formId}/edit`)}>Edit</button>
+
         <button type="button" onClick={() => navigate("/forms")}>Back to My forms</button>
+
         <button type="button" onClick={() => navigate(`/responses/form/${formId}`)}>Responses</button>
+
+        {form.status === "PUBLISHED" && (
+          <button onClick={handleFormStatusChange}>Halt Form</button>
+        )}
+
+        {form.status === "CLOSED" && (
+          <button onClick={handleFormStatusChange}>Resume Form</button>
+        )}
+
       </header>
       <main>
         <h2>
