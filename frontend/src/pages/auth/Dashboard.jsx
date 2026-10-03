@@ -1,15 +1,20 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCurrentUser, logoutUser, editProfile, changePassword, deleteAccount } from "../../services/auth.service.js";
-import "../../css/Dashboard.css";
+import {
+  getCurrentUser,
+  editProfile,
+  changePassword,
+  deleteAccount,
+} from "../../services/auth.service.js";
+import { getMyForms } from "../../services/form.service.js";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
+  const [formsCount, setFormsCount] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [loggingOut, setLoggingOut] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -25,69 +30,54 @@ const Dashboard = () => {
   const [passwordError, setPasswordError] = useState("");
   const [deletingAccount, setDeletingAccount] = useState(false);
 
-  const fetchCurrentUser = async () => {
-    try {
-      setLoading(true);
-      setError("");
-      const result = await getCurrentUser();
-      setUser(result.data);
-      setName(result.data.name);
-    } catch (err) {
-      setError(err?.error?.message || "Failed to fetch user");
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    let isMounted = true;
+    const loadDashboardData = async () => {
+      try {
+        setLoading(true);
+        setError("");
+        const [userResult, formsResult] = await Promise.all([
+          getCurrentUser(),
+          getMyForms().catch(() => ({ data: [] })),
+        ]);
+        if (isMounted) {
+          setUser(userResult.data);
+          setName(userResult.data.name);
+          setFormsCount(formsResult.data?.length ?? 0);
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError(err?.error?.message || "Failed to load dashboard data.");
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+    loadDashboardData();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
-  const handleMyforms = () => {
-    navigate("/forms")
-  }
-
-  const handleLogout = async () => {
-    setLoggingOut(true);
-    setError("");
-    try {
-      const result = await logoutUser();
-      setMessage(result.message);
-      setUser(null);
-      navigate("/login");
-
-
-    } catch (err) {
-      setError(err?.error?.message || "Logout failed");
-    } finally {
-      setLoggingOut(false);
-    }
-  }
-
-  const handleEditProfile = async () => {
+  const handleEditProfile = async (event) => {
+    event.preventDefault();
+    if (!name.trim()) return;
     try {
       setSaving(true);
       setError("");
       setMessage("");
-      const result = await editProfile({ name });
+      const result = await editProfile({ name: name.trim() });
       setUser(result.data);
       setName(result.data.name);
       setIsEditing(false);
-      setMessage(result.message);
+      setMessage(result.message || "Profile updated successfully.");
     } catch (err) {
       setError(err?.error?.message || "Failed to update profile.");
     } finally {
       setSaving(false);
     }
-  }
-
-  const handleEditClickButton = () => {
-    setIsEditing(true);
-    setMessage("");
-    setError("");
-  };
-
-  const handleCancelEdit = () => {
-    setName(user.name);
-    setIsEditing(false);
-    setMessage("");
-    setError("");
   };
 
   const handlePasswordInputChange = (event) => {
@@ -129,7 +119,6 @@ const Dashboard = () => {
     setError("");
     try {
       await deleteAccount();
-      setUser(null);
       navigate("/register");
     } catch (err) {
       setError(err?.error?.message || "Failed to delete account.");
@@ -137,152 +126,284 @@ const Dashboard = () => {
     }
   };
 
-  const handleNavigation = () => {
-    navigate("/forms/create");
+  if (loading) {
+    return (
+      <div style={{ textAlign: "center", padding: "4rem 0", color: "var(--text-muted)" }}>
+        <div className="spinner" style={{ width: "24px", height: "24px", marginBottom: "1rem" }}></div>
+        <p>Loading your dashboard...</p>
+      </div>
+    );
   }
 
-  useEffect(() => {
-    fetchCurrentUser();
-  }, []);
-
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-card">
-        <h1 className="dashboard-title">Dashboard</h1>
-        <div className="dashboard-actions">
-          <button className="dashboard-btn" onClick={handleLogout}>{loggingOut ? "logging out......" : "Logout"}</button>
-          <button className="dashboard-btn" onClick={handleNavigation}>Create Forms</button>
-          <button className="dashboard-btn" onClick={handleMyforms}>My forms</button>
+    <div className="dashboard-layout">
+      {/* Page Header */}
+      <div className="page-header">
+        <div className="page-title-group">
+          <h1 className="page-title">
+            Welcome back{user?.name ? `, ${user.name}` : ""}
+          </h1>
+          <p className="page-subtitle">
+            Manage your custom forms, review incoming responses, and configure your account.
+          </p>
         </div>
 
-        {loading && <p className="dashboard-status">Loading..........</p>}
-        {message && <p className="dashboard-message dashboard-success">{message}</p>}
-        {error && <p className="dashboard-message dashboard-error">{error}</p>}
+        <div className="page-actions">
+          <button
+            type="button"
+            className="btn btn-outline"
+            onClick={() => navigate("/forms")}
+          >
+            My Forms
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => navigate("/forms/create")}
+          >
+            + Create Form
+          </button>
+        </div>
+      </div>
 
-        {user && (
-          <div className="dashboard-section">
-            <h2>Welcome, {user.name}</h2>
+      {/* Global Alerts */}
+      {message && <div className="alert alert-success">{message}</div>}
+      {error && <div className="alert alert-error">{error}</div>}
+
+      {/* Overview Cards Grid */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+          gap: "1.25rem",
+          marginBottom: "2rem",
+        }}
+      >
+        <div className="card">
+          <div className="card-header">
+            <span style={{ fontSize: "var(--font-xs)", textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--text-muted)", fontWeight: "700" }}>
+              Forms Created
+            </span>
+            <span style={{ fontSize: "1.4rem" }}>📋</span>
           </div>
-        )}
-        {user && (
-          <div className="dashboard-section">
-            <h2>Profile</h2>
-            <p>
-              <strong>Email: </strong> {user.email}
-            </p>
-            {
-              !isEditing ? (<>
-                <p><strong>Name: </strong>{user.name}</p>
-                <button className="dashboard-btn dashboard-btn-secondary" onClick={handleEditClickButton}>Edit</button></>) : (<>
-                  <label htmlFor="name">Name</label>
-                  <input className="dashboard-input" id="name" type="text" value={name} onChange={(event) => setName(event.target.value)} />
-
-                  <div className="dashboard-btn-group">
-                    <button className="dashboard-btn" onClick={handleEditProfile}
-                      disabled={saving}>{saving ? "Saving changes...." : "Save Changes"}</button>
-                    <button className="dashboard-btn dashboard-btn-secondary" onClick={handleCancelEdit}
-                      disabled={saving}>Cancel</button>
-                  </div>
-                </>)
-            }
-
+          <div style={{ fontSize: "2.25rem", fontWeight: "800", color: "#ffffff", lineHeight: 1 }}>
+            {formsCount !== null ? formsCount : 0}
           </div>
-        )}
+          <p style={{ margin: "0.6rem 0 1rem", fontSize: "var(--font-xs)", color: "var(--text-muted)" }}>
+            {formsCount === 1 ? "1 active form in your account" : `${formsCount || 0} total forms in your workspace`}
+          </p>
+          <button
+            type="button"
+            className="btn btn-secondary btn-sm"
+            onClick={() => navigate("/forms")}
+            style={{ width: "100%" }}
+          >
+            View All Forms →
+          </button>
+        </div>
 
-        {user && (
-          <div className="dashboard-section">
-            <h2>Change Password</h2>
-            {passwordMessage && <p className="dashboard-message dashboard-success">{passwordMessage}</p>}
-            {passwordError && <p className="dashboard-message dashboard-error">{passwordError}</p>}
-            {!isChangingPassword ? (
-              <button className="dashboard-btn dashboard-btn-secondary" type="button" onClick={() => setIsChangingPassword(true)}>
-                Change Password
+        <div className="card">
+          <div className="card-header">
+            <span style={{ fontSize: "var(--font-xs)", textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--text-muted)", fontWeight: "700" }}>
+              Quick Action
+            </span>
+            <span style={{ fontSize: "1.4rem" }}>✨</span>
+          </div>
+          <div style={{ fontSize: "var(--font-lg)", fontWeight: "700", color: "#ffffff", marginBottom: "0.5rem" }}>
+            New Form
+          </div>
+          <p style={{ margin: "0 0 1.25rem", fontSize: "var(--font-xs)", color: "var(--text-muted)" }}>
+            Create questions, configure availability schedules, and publish to start collecting responses.
+          </p>
+          <button
+            type="button"
+            className="btn btn-primary btn-sm"
+            onClick={() => navigate("/forms/create")}
+            style={{ width: "100%" }}
+          >
+            + Create New Form
+          </button>
+        </div>
+      </div>
+
+      {/* Account & Profile Settings */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+        {/* Profile Card */}
+        <div className="card">
+          <div className="card-header">
+            <div>
+              <h2 className="card-title">Profile Information</h2>
+              <p className="card-subtitle">Your display name and registered email address</p>
+            </div>
+            {!isEditing && (
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={() => setIsEditing(true)}
+              >
+                Edit Profile
               </button>
-            ) : (
-              <form className="dashboard-form" onSubmit={handleChangePasswordSubmit}>
-                <div>
-                  <label htmlFor="currentPassword">Current Password</label>
-                  <input
-                    className="dashboard-input"
-                    id="currentPassword"
-                    name="currentPassword"
-                    type="password"
-                    value={passwordData.currentPassword}
-                    onChange={handlePasswordInputChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="newPassword">New Password</label>
-                  <input
-                    className="dashboard-input"
-                    id="newPassword"
-                    name="newPassword"
-                    type="password"
-                    value={passwordData.newPassword}
-                    onChange={handlePasswordInputChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="confirmPassword">Confirm New Password</label>
-                  <input
-                    className="dashboard-input"
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    value={passwordData.confirmPassword}
-                    onChange={handlePasswordInputChange}
-                    required
-                  />
-                </div>
-                <div className="dashboard-btn-group">
-                  <button className="dashboard-btn" type="submit" disabled={changingPassword}>
-                    {changingPassword ? "Updating password..." : "Update Password"}
-                  </button>
-                  <button
-                    className="dashboard-btn dashboard-btn-secondary"
-                    type="button"
-                    disabled={changingPassword}
-                    onClick={() => {
-                      setIsChangingPassword(false);
-                      setPasswordError("");
-                      setPasswordData({
-                        currentPassword: "",
-                        newPassword: "",
-                        confirmPassword: "",
-                      });
-                    }}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
             )}
           </div>
-        )}
 
-        {user && (
-          <div className="dashboard-section dashboard-danger-zone">
-            <h2>Delete Account</h2>
-            <p>
-              Permanently delete your account along with all your created forms and collected responses.
-            </p>
-            <button
-              className="dashboard-btn dashboard-btn-danger"
-              type="button"
-              onClick={handleDeleteAccount}
-              disabled={deletingAccount}
-            >
-              {deletingAccount ? "Deleting account..." : "Delete Account"}
-            </button>
+          {!isEditing ? (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
+              <div>
+                <span style={{ fontSize: "var(--font-xs)", color: "var(--text-muted)", display: "block" }}>Full Name</span>
+                <span style={{ fontSize: "var(--font-base)", fontWeight: "600", color: "#ffffff" }}>{user?.name}</span>
+              </div>
+              <div>
+                <span style={{ fontSize: "var(--font-xs)", color: "var(--text-muted)", display: "block" }}>Email Address</span>
+                <span style={{ fontSize: "var(--font-base)", fontWeight: "600", color: "#ffffff" }}>{user?.email}</span>
+              </div>
+            </div>
+          ) : (
+            <form onSubmit={handleEditProfile} style={{ maxWidth: "420px" }}>
+              <div className="form-group">
+                <label className="form-label" htmlFor="name">Display Name</label>
+                <input
+                  id="name"
+                  type="text"
+                  className="form-input"
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                  required
+                />
+              </div>
+              <div style={{ display: "flex", gap: "0.75rem" }}>
+                <button type="submit" className="btn btn-primary btn-sm" disabled={saving}>
+                  {saving ? "Saving changes..." : "Save Changes"}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => {
+                    setName(user?.name || "");
+                    setIsEditing(false);
+                  }}
+                  disabled={saving}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+
+        {/* Security / Password Card */}
+        <div className="card">
+          <div className="card-header">
+            <div>
+              <h2 className="card-title">Password & Security</h2>
+              <p className="card-subtitle">Ensure your account is protected with a strong password</p>
+            </div>
+            {!isChangingPassword && (
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={() => setIsChangingPassword(true)}
+              >
+                Change Password
+              </button>
+            )}
           </div>
-        )}
 
+          {passwordMessage && <div className="alert alert-success">{passwordMessage}</div>}
+          {passwordError && <div className="alert alert-error">{passwordError}</div>}
+
+          {isChangingPassword && (
+            <form onSubmit={handleChangePasswordSubmit} style={{ maxWidth: "420px" }}>
+              <div className="form-group">
+                <label className="form-label" htmlFor="currentPassword">Current Password</label>
+                <input
+                  id="currentPassword"
+                  name="currentPassword"
+                  type="password"
+                  className="form-input"
+                  value={passwordData.currentPassword}
+                  onChange={handlePasswordInputChange}
+                  placeholder="Enter current password"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="newPassword">New Password</label>
+                <input
+                  id="newPassword"
+                  name="newPassword"
+                  type="password"
+                  className="form-input"
+                  value={passwordData.newPassword}
+                  onChange={handlePasswordInputChange}
+                  placeholder="Enter new password (min. 8 characters)"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="confirmPassword">Confirm New Password</label>
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  className="form-input"
+                  value={passwordData.confirmPassword}
+                  onChange={handlePasswordInputChange}
+                  placeholder="Re-enter new password"
+                  required
+                />
+              </div>
+              <div style={{ display: "flex", gap: "0.75rem" }}>
+                <button type="submit" className="btn btn-primary btn-sm" disabled={changingPassword}>
+                  {changingPassword ? "Updating password..." : "Update Password"}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm"
+                  disabled={changingPassword}
+                  onClick={() => {
+                    setIsChangingPassword(false);
+                    setPasswordError("");
+                    setPasswordData({
+                      currentPassword: "",
+                      newPassword: "",
+                      confirmPassword: "",
+                    });
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+
+        {/* Danger Zone */}
+        <div className="card card-danger">
+          <div className="card-header">
+            <div>
+              <h2 className="card-title" style={{ color: "var(--danger-fg)" }}>
+                Danger Zone
+              </h2>
+              <p className="card-subtitle">
+                Permanently delete your account, created forms, and collected responses.
+              </p>
+            </div>
+          </div>
+          <p style={{ margin: "0 0 1.25rem", fontSize: "var(--font-sm)", color: "var(--text-muted)" }}>
+            Once you delete your account, all data will be permanently removed from FormFlow servers. This action is irreversible.
+          </p>
+          <button
+            type="button"
+            className="btn btn-danger-outline btn-sm"
+            onClick={handleDeleteAccount}
+            disabled={deletingAccount}
+          >
+            {deletingAccount ? "Deleting account..." : "Delete Account"}
+          </button>
+        </div>
       </div>
     </div>
   );
-
 };
 
 export default Dashboard;

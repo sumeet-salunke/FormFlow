@@ -30,3 +30,9 @@ export const updateFormStatus = (formId, status) => {
     body: JSON.stringify({ status }),
   });
 };
+
+export const publishForm = (formId) => {
+  return apiRequest(`/forms/${formId}/publish`, {
+    method: "POST",
+  });
+};

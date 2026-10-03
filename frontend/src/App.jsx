@@ -14,6 +14,7 @@ import ResponseSubmitted from "./pages/forms/ResponseSubmitted.jsx";
 import FormResponses from "./pages/forms/FormResponses.jsx";
 import EditResponse from "./pages/forms/EditResponse.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import AuthenticatedLayout from "./components/AuthenticatedLayout.jsx";
 
 const App = () => {
   return (
@@ -26,71 +27,23 @@ const App = () => {
         <Route path="/forms/public/:publicId" element={<PublicForm />} />
         <Route path="/forms/public/:publicId/submitted" element={<ResponseSubmitted />} />
 
-        {/* Protected Owner Routes */}
+        {/* Protected Owner Routes wrapped in AuthenticatedLayout */}
         <Route
-          path="/dashboard"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <AuthenticatedLayout />
             </ProtectedRoute>
           }
-        />
-        <Route
-          path="/forms/create"
-          element={
-            <ProtectedRoute>
-              <CreateForm />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/forms"
-          element={
-            <ProtectedRoute>
-              <MyForms />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/forms/:formId"
-          element={
-            <ProtectedRoute>
-              <ViewForm />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/forms/:formId/edit"
-          element={
-            <ProtectedRoute>
-              <EditForm />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/forms/:formId/builder"
-          element={
-            <ProtectedRoute>
-              <FormBuilder />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/responses/form/:formId"
-          element={
-            <ProtectedRoute>
-              <FormResponses />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/responses/:responseId/edit"
-          element={
-            <ProtectedRoute>
-              <EditResponse />
-            </ProtectedRoute>
-          }
-        />
+        >
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/forms" element={<MyForms />} />
+          <Route path="/forms/create" element={<CreateForm />} />
+          <Route path="/forms/:formId" element={<ViewForm />} />
+          <Route path="/forms/:formId/edit" element={<EditForm />} />
+          <Route path="/forms/:formId/builder" element={<FormBuilder />} />
+          <Route path="/responses/form/:formId" element={<FormResponses />} />
+          <Route path="/responses/:responseId/edit" element={<EditResponse />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
